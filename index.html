@@ -55,14 +55,13 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
 body{
   background:var(--void);
   color:var(--ink-hi);
   font-family:var(--font-body);
   font-size:18px;
   line-height:1.6;
-  overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
   cursor:default;
 }
@@ -315,6 +314,8 @@ header.scrolled{
 }
 .btn-ghost:hover{border-color:var(--blue-neon);box-shadow:0 0 20px rgba(79,216,255,.18);transform:translateY(-2px);}
 .btn-small{padding:9px 18px;font-size:.68rem;}
+.btn-large{padding:18px 38px;font-size:.9rem;letter-spacing:.18em;gap:12px;}
+.btn-large svg{width:19px;height:19px;}
 
 .nav-cta{display:none;}
 @media(min-width:900px){.nav-cta{display:inline-flex;}}
@@ -720,7 +721,6 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
       <a href="#story">Story</a>
       <a href="#opponents">Opponents</a>
       <a href="#features">Features</a>
-      <a href="#screenshots">Screenshots</a>
       <a href="#testimonials">Reviews</a>
       <a href="dashboard.html">Dashboard</a>
       <a href="leaderboard.html">Leaderboard</a>
@@ -784,19 +784,15 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
       <p class="hero-sub">You are trapped. <strong>Only logic can set you free.</strong> Six legendary minds stand between you and the surface — <span id="typed-line"></span></p>
 
       <div class="hero-actions">
-        <a href="debate-room.html" class="btn btn-primary" data-ripple>
+        <a href="debate-room.html" class="btn btn-primary btn-large" data-ripple>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3v7h7l-9 11v-7H5l9-11z"/></svg>
           Enter Arena
-        </a>
-        <a href="#trailer" class="btn btn-ghost" data-ripple id="trailer-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-          Watch Trailer
         </a>
       </div>
 
       <div class="hero-stats" aria-label="Game statistics">
         <div class="stat"><b data-count="6">0</b><span>Legendary Minds</span></div>
-        <div class="stat"><b data-count="42">0</b><span>Debate Chambers</span></div>
+        <div class="stat"><b data-count="6">0</b><span>Debate Chambers</span></div>
         <div class="stat"><b data-count="3" data-suffix=" Strikes">0</b><span>Before You Lose Your Mind</span></div>
       </div>
     </div>
@@ -827,6 +823,7 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
         <div class="story-body">
           <p>Each chamber holds one legendary thinker, pulled from history and rebuilt in light and logic. To move forward, you must face them — not with weapons, but with <strong>argument</strong>. Wit against wit. Reason against reason.</p>
           <p>Win, and the Arena opens a path deeper toward the surface. Lose, and a fragment of who you are is taken and folded into the walls, added to the thousands who came before you.</p>
+          <p>Every argument is scored the moment you speak it. <strong>Score higher than your opponent, and the chamber unlocks</strong> — the path forward opens, and the next mind awaits.</p>
         </div>
 
         <p class="story-warning">⚠ LOSE THREE DEBATES, AND YOUR MEMORY BECOMES PART OF THE ARENA. FOREVER.</p>
@@ -852,14 +849,14 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
       </button>
 
       <div class="opponents-track" id="opponents-track" tabindex="0" role="list" aria-label="Opponent roster">
-        <!-- Card 1: Socrates -->
+        <!-- Card 1: Adi Shankaracharya -->
         <article class="opp-card" role="listitem" style="--pc1:rgba(79,216,255,.35)">
           <div class="opp-portrait" aria-hidden="true">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="20" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M20 92c2-24 12-36 30-36s28 12 30 36" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M32 46c6 6 30 6 36 0" stroke="#4fd8ff" stroke-width="1" fill="none" opacity=".6"/></svg>
           </div>
-          <div class="opp-quote">"I know that I know nothing — and that is precisely why you will lose."</div>
+          <div class="opp-quote">"The self that argues and the self that doubts are one — dissolve that, and your argument follows."</div>
           <div class="opp-info">
-            <h3 class="opp-name">Socrates</h3>
+            <h3 class="opp-name">Adi Shankaracharya</h3>
             <p class="opp-title">The Philosopher</p>
             <div class="opp-diff">DIFFICULTY <span class="opp-stars">
               <i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i><i></i>
@@ -867,14 +864,14 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           </div>
         </article>
 
-        <!-- Card 2: Sun Tzu -->
+        <!-- Card 2: Chanakya -->
         <article class="opp-card" role="listitem" style="--pc1:rgba(255,120,90,.3)">
           <div class="opp-portrait" aria-hidden="true">
             <svg viewBox="0 0 100 100"><path d="M30 40 L50 20 L70 40 Z" fill="#ff785a" opacity=".8"/><circle cx="50" cy="52" r="16" stroke="#ff785a" stroke-width="1.6" fill="none"/><path d="M22 92c2-22 12-32 28-32s26 10 28 32" stroke="#ff785a" stroke-width="1.6" fill="none"/></svg>
           </div>
           <div class="opp-quote">"The debate is won before either of us speaks a word."</div>
           <div class="opp-info">
-            <h3 class="opp-name">Sun Tzu</h3>
+            <h3 class="opp-name">Chanakya</h3>
             <p class="opp-title">The Strategist</p>
             <div class="opp-diff">DIFFICULTY <span class="opp-stars">
               <i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i>
@@ -882,14 +879,14 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           </div>
         </article>
 
-        <!-- Card 3: Machiavelli -->
+        <!-- Card 3: Shivaji Maharaj -->
         <article class="opp-card" role="listitem" style="--pc1:rgba(168,85,247,.35)">
           <div class="opp-portrait" aria-hidden="true">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="19" stroke="#a855f7" stroke-width="1.6" fill="none"/><path d="M21 92c2-23 13-35 29-35s27 12 29 35" stroke="#a855f7" stroke-width="1.6" fill="none"/><path d="M31 33c8-10 30-10 38 0" stroke="#a855f7" stroke-width="1.2" opacity=".5" fill="none"/></svg>
           </div>
-          <div class="opp-quote">"It is far safer to be feared than loved — especially by you."</div>
+          <div class="opp-quote">"Know the terrain of the argument, and the battle is already won."</div>
           <div class="opp-info">
-            <h3 class="opp-name">Machiavelli</h3>
+            <h3 class="opp-name">Shivaji Maharaj</h3>
             <p class="opp-title">The Realist</p>
             <div class="opp-diff">DIFFICULTY <span class="opp-stars">
               <i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i><i></i>
@@ -897,14 +894,14 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           </div>
         </article>
 
-        <!-- Card 4: Einstein -->
+        <!-- Card 4: Ramanujan -->
         <article class="opp-card" role="listitem" style="--pc1:rgba(79,216,255,.35)">
           <div class="opp-portrait" aria-hidden="true">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="19" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M22 92c2-23 12-35 28-35s28 12 28 35" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M30 32c-4 8-2 16 6 18M70 32c4 8 2 16-6 18" stroke="#4fd8ff" stroke-width="1" opacity=".6" fill="none"/></svg>
           </div>
-          <div class="opp-quote">"Logic will get you from A to B. Imagination will get you nowhere near escape."</div>
+          <div class="opp-quote">"Numbers came to me in dreams. Your argument won't survive daylight."</div>
           <div class="opp-info">
-            <h3 class="opp-name">Einstein</h3>
+            <h3 class="opp-name">Srinivasa Ramanujan</h3>
             <p class="opp-title">The Genius</p>
             <div class="opp-diff">DIFFICULTY <span class="opp-stars">
               <i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i>
@@ -912,14 +909,14 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           </div>
         </article>
 
-        <!-- Card 5: Cleopatra -->
+        <!-- Card 5: Razia Sultana -->
         <article class="opp-card" role="listitem" style="--pc1:rgba(217,180,106,.35)">
           <div class="opp-portrait" aria-hidden="true">
             <svg viewBox="0 0 100 100"><path d="M28 30h44v8H28z" fill="#d9b46a" opacity=".85"/><circle cx="50" cy="42" r="16" stroke="#d9b46a" stroke-width="1.6" fill="none"/><path d="M24 92c2-22 13-32 26-32s24 10 26 32" stroke="#d9b46a" stroke-width="1.6" fill="none"/></svg>
           </div>
-          <div class="opp-quote">"I have outlasted empires. Your argument will not outlast this hour."</div>
+          <div class="opp-quote">"I claimed a throne no one thought a woman could hold. This debate is nothing."</div>
           <div class="opp-info">
-            <h3 class="opp-name">Cleopatra</h3>
+            <h3 class="opp-name">Razia Sultana</h3>
             <p class="opp-title">The Sovereign</p>
             <div class="opp-diff">DIFFICULTY <span class="opp-stars">
               <i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i><i></i>
@@ -927,14 +924,14 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           </div>
         </article>
 
-        <!-- Card 6: Tesla -->
+        <!-- Card 6: APJ Abdul Kalam -->
         <article class="opp-card" role="listitem" style="--pc1:rgba(79,216,255,.4)">
           <div class="opp-portrait" aria-hidden="true">
             <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="18" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M23 92c2-22 12-33 27-33s25 11 27 33" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M50 8 L54 22 L46 22 Z" fill="#4fd8ff" opacity=".8"/></svg>
           </div>
-          <div class="opp-quote">"The present is theirs. The future — and this debate — is mine."</div>
+          <div class="opp-quote">"Dream big, but you will need more than dreams to defeat me here."</div>
           <div class="opp-info">
-            <h3 class="opp-name">Nikola Tesla</h3>
+            <h3 class="opp-name">APJ Abdul Kalam</h3>
             <p class="opp-title">The Inventor</p>
             <div class="opp-diff">DIFFICULTY <span class="opp-stars">
               <i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i>
@@ -998,53 +995,6 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
 
 <div class="divider" aria-hidden="true"></div>
 
-<!-- ============================= SCREENSHOTS ============================= -->
-<section id="screenshots" aria-labelledby="screens-heading">
-  <div class="container">
-    <div class="section-head reveal">
-      <p class="eyebrow">Chapter Four</p>
-      <h2 id="screens-heading">Inside the Chambers</h2>
-      <p>A glimpse of what waits beyond the gate.</p>
-    </div>
-
-    <div class="screens-grid reveal-stagger">
-      <figure class="screen" style="--sc1:rgba(79,216,255,.35);--sc2:rgba(168,85,247,.25)">
-        <div class="screen-fill"></div><div class="screen-grid-lines"></div>
-        <div class="screen-glow" style="width:160px;height:160px;top:20%;left:15%;background:radial-gradient(circle,#4fd8ff,transparent 70%);"></div>
-        <span class="screen-tag">CHAMBER 01</span>
-        <span class="screen-label">The Philosopher's Hall</span>
-        <div class="screen-play" aria-hidden="true"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="#eef1fb"><polygon points="6 4 20 12 6 20"/></svg></span></div>
-      </figure>
-
-      <figure class="screen" style="--sc1:rgba(255,120,90,.3);--sc2:rgba(217,180,106,.25)">
-        <div class="screen-fill"></div><div class="screen-grid-lines"></div>
-        <div class="screen-glow" style="width:180px;height:180px;bottom:10%;right:10%;background:radial-gradient(circle,#ff785a,transparent 70%);animation-delay:1.2s;"></div>
-        <span class="screen-tag">CHAMBER 09</span>
-        <span class="screen-label">War Room of Sun Tzu</span>
-        <div class="screen-play" aria-hidden="true"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="#eef1fb"><polygon points="6 4 20 12 6 20"/></svg></span></div>
-      </figure>
-
-      <figure class="screen" style="--sc1:rgba(168,85,247,.35);--sc2:rgba(79,216,255,.2)">
-        <div class="screen-fill"></div><div class="screen-grid-lines"></div>
-        <div class="screen-glow" style="width:150px;height:150px;top:30%;right:20%;background:radial-gradient(circle,#a855f7,transparent 70%);animation-delay:2.4s;"></div>
-        <span class="screen-tag">CHAMBER 17</span>
-        <span class="screen-label">Machiavelli's Court</span>
-        <div class="screen-play" aria-hidden="true"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="#eef1fb"><polygon points="6 4 20 12 6 20"/></svg></span></div>
-      </figure>
-
-      <figure class="screen" style="--sc1:rgba(79,216,255,.4);--sc2:rgba(168,85,247,.3)">
-        <div class="screen-fill"></div><div class="screen-grid-lines"></div>
-        <div class="screen-glow" style="width:170px;height:170px;bottom:15%;left:15%;background:radial-gradient(circle,#4fd8ff,transparent 70%);animation-delay:.6s;"></div>
-        <span class="screen-tag">FINAL CHAMBER</span>
-        <span class="screen-label">The Gate of Tesla</span>
-        <div class="screen-play" aria-hidden="true"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="#eef1fb"><polygon points="6 4 20 12 6 20"/></svg></span></div>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<div class="divider" aria-hidden="true"></div>
-
 <!-- ============================= TESTIMONIALS ============================= -->
 <section id="testimonials" aria-labelledby="testi-heading">
   <div class="container">
@@ -1062,10 +1012,10 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
           <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
         </div>
-        <p>"I lost to Socrates four times before I understood the trap. When I finally beat him, it felt more earned than any boss fight I've played."</p>
+        <p>"I lost to Adi Shankaracharya twice before I understood the trap. On my third try, beating him felt more earned than any boss fight I've played."</p>
         <div class="testi-person">
-          <span class="testi-avatar" aria-hidden="true">RK</span>
-          <div><div class="testi-name">R. Kessler</div><div class="testi-role">Escaped in 6h 42m</div></div>
+          <span class="testi-avatar" aria-hidden="true">AK</span>
+          <div><div class="testi-name">A. Kulkarni</div><div class="testi-role">Escaped in 3h 12m</div></div>
         </div>
       </article>
 
@@ -1077,10 +1027,10 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
           <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
         </div>
-        <p>"Machiavelli reads your last five arguments and turns them against you. The AI doesn't feel scripted — it feels like it's actually thinking."</p>
+        <p>"Chanakya remembers everything you've said, and he's already three moves ahead. I've never felt this outmaneuvered by a game before."</p>
         <div class="testi-person">
-          <span class="testi-avatar" aria-hidden="true">MO</span>
-          <div><div class="testi-name">M. Osei</div><div class="testi-role">Still trapped on Chamber 17</div></div>
+          <span class="testi-avatar" aria-hidden="true">SB</span>
+          <div><div class="testi-name">S. Bhatt</div><div class="testi-role">Still stuck on Chamber 2</div></div>
         </div>
       </article>
 
@@ -1092,10 +1042,10 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
           <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
           <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
         </div>
-        <p>"The voice acting on Tesla's final chamber gave me chills. This is the first 'debate game' that actually feels tense."</p>
+        <p>"The final chamber with Kalam genuinely gave me chills. This is the first debate game that actually made my hands shake before I hit send."</p>
         <div class="testi-person">
-          <span class="testi-avatar" aria-hidden="true">JL</span>
-          <div><div class="testi-name">J. Lindqvist</div><div class="testi-role">Escaped in 4h 05m</div></div>
+          <span class="testi-avatar" aria-hidden="true">VK</span>
+          <div><div class="testi-name">V. Krishnan</div><div class="testi-role">Escaped in 2h 47m</div></div>
         </div>
       </article>
     </div>
@@ -1110,7 +1060,7 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
     <div class="final-cta-panel reveal">
       <p class="eyebrow">The Gate Is Open</p>
       <h2 id="cta-heading">Your Mind Is the Only Weapon You Brought.</h2>
-      <p>Six thinkers. Forty-two chambers. One way out. Step through the gate and prove your logic can survive what's waiting on the other side.</p>
+      <p>Six thinkers. Six chambers. One way out. Step through the gate and prove your logic can survive what's waiting on the other side.</p>
       <a href="debate-room.html" class="btn btn-primary" data-ripple>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3v7h7l-9 11v-7H5l9-11z"/></svg>
         Enter Arena Now
@@ -1155,15 +1105,12 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
         <a href="#story">Story</a>
         <a href="#opponents">Opponents</a>
         <a href="#features">Features</a>
-        <a href="#screenshots">Screenshots</a>
       </div>
 
       <div class="footer-col">
         <h4>Contact</h4>
-        <a href="mailto:hello@arenaofminds.game">hello@arenaofminds.game</a>
-        <a href="#">Press Kit</a>
+        <a href="mailto:team@nextminds.studio">team@nextminds.studio</a>
         <a href="#">Support</a>
-        <a href="#">GitHub Repository</a>
       </div>
     </div>
 
@@ -1406,13 +1353,6 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative;z-
   }
   prevBtn.addEventListener('click', function(){ scrollTrack(-1); });
   nextBtn.addEventListener('click', function(){ scrollTrack(1); });
-
-  /* ===================== WATCH TRAILER (placeholder scroll-to) ===================== */
-  var trailerBtn = document.getElementById('trailer-btn');
-  trailerBtn.addEventListener('click', function(e){
-    e.preventDefault();
-    document.getElementById('screenshots').scrollIntoView({behavior:'smooth'});
-  });
 
   /* ===================== SMOOTH SCROLL FOR ANCHOR LINKS ===================== */
   document.querySelectorAll('a[href^="#"]').forEach(function(a){
