@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Arena of Minds</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --void:#05060c; --stone-deep:#0b0e1a; --stone:#141828;
+  --blue-neon:#4fd8ff; --violet-neon:#a855f7; --gold-relic:#d9b46a; --danger:#ff5470;
+  --ink-hi:#eef1fb; --ink-lo:#8b93b3; --ink-faint:#525a78;
+  --line:rgba(143,159,214,0.16);
+  --radius-m:14px; --radius-l:24px;
+  --ease:cubic-bezier(.16,.8,.28,1);
+  --font-display:'Cinzel',serif; --font-ui:'Orbitron',sans-serif; --font-body:'Rajdhani',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--void);color:var(--ink-hi);font-family:var(--font-body);font-size:17px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;}
+a{color:inherit;text-decoration:none;}
+button,input,select{font-family:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+img,svg{display:block;max-width:100%;}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;}}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--blue-neon);outline-offset:2px;}
+
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 85% 0%, rgba(168,85,247,.10), transparent 60%),
+             radial-gradient(ellipse 50% 40% at 5% 100%, rgba(79,216,255,.10), transparent 60%), var(--void);}
+
+.container{width:min(820px,100% - 40px);margin-inline:auto;position:relative;z-index:1;}
+
+header.top-nav{position:sticky;top:0;z-index:10;padding:16px 0;background:rgba(8,10,20,.75);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+.nav-row{width:min(1200px,100% - 40px);margin-inline:auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:1.05rem;}
+.brand svg{width:30px;height:30px;}
+.nav-links{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;}
+.nav-links a{font-family:var(--font-ui);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px;border-radius:6px;color:var(--ink-lo);transition:color .2s ease,background .2s ease;}
+.nav-links a:hover{color:var(--ink-hi);background:rgba(79,216,255,.08);}
+.nav-links a.active{color:var(--blue-neon);}
+
+main{padding:50px 0 90px;}
+.page-head{margin-bottom:36px;}
+.eyebrow{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--blue-neon);}
+.page-head h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-top:12px;text-transform:uppercase;}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s var(--ease),transform .55s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+.settings-panel{
+  border-radius:var(--radius-l);border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(20,24,40,.5),rgba(8,10,20,.65));
+  padding:8px 28px;margin-bottom:22px;
+}
+.settings-panel h2{
+  font-size:.98rem;padding:20px 0 14px;display:flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.02em;
+}
+.settings-panel h2 svg{width:18px;height:18px;stroke:var(--blue-neon);}
+
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:18px 0;border-top:1px solid var(--line);flex-wrap:wrap;
+}
+.setting-row:first-of-type{border-top:none;}
+.setting-label{display:flex;flex-direction:column;gap:3px;}
+.setting-label .sl-name{font-size:1rem;font-weight:600;}
+.setting-label .sl-desc{font-size:.86rem;color:var(--ink-lo);}
+.setting-control{flex:0 0 auto;min-width:160px;display:flex;justify-content:flex-end;}
+
+/* ============== TOGGLE SWITCH ============== */
+.switch{position:relative;display:inline-block;width:52px;height:28px;flex:0 0 auto;}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2;}
+.switch .track{
+  position:absolute;inset:0;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid var(--line);
+  transition:background .3s ease,border-color .3s ease;
+}
+.switch .thumb{
+  position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink-faint);
+  transition:transform .3s var(--ease),background .3s ease,box-shadow .3s ease;
+}
+.switch input:checked ~ .track{background:linear-gradient(120deg,var(--blue-neon),var(--violet-neon));border-color:transparent;}
+.switch input:checked ~ .thumb{transform:translateX(24px);background:#fff;box-shadow:0 0 10px rgba(79,216,255,.6);}
+.switch input:focus-visible ~ .track{outline:2px solid var(--blue-neon);outline-offset:2px;}
+
+/* ============== SLIDER ============== */
+.slider-wrap{display:flex;align-items:center;gap:12px;min-width:220px;}
+input[type="range"]{
+  -webkit-appearance:none;appearance:none;width:150px;height:6px;border-radius:4px;
+  background:linear-gradient(90deg,var(--blue-neon) var(--val,70%),rgba(255,255,255,.08) 0);
+  outline:none;cursor:pointer;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;
+  box-shadow:0 0 10px rgba(79,216,255,.6);border:2px solid var(--blue-neon);cursor:pointer;
+  transition:transform .15s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);}
+input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--blue-neon);cursor:pointer;}
+.slider-val{font-family:var(--font-ui);font-size:.72rem;color:var(--ink-lo);min-width:34px;text-align:right;}
+
+/* ============== SEGMENTED CONTROL (difficulty) ============== */
+.segmented{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.segmented button{
+  padding:9px 16px;font-family:var(--font-ui);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-lo);transition:background .25s ease,color .25s ease;border-right:1px solid var(--line);
+}
+.segmented button:last-child{border-right:none;}
+.segmented button.active{background:linear-gradient(120deg,var(--blue-neon),var(--violet-neon));color:var(--void);font-weight:700;}
+
+/* ============== SELECT ============== */
+.select-wrap{position:relative;}
+select{
+  appearance:none;background:var(--stone);border:1px solid var(--line);border-radius:8px;
+  padding:9px 34px 9px 14px;font-size:.92rem;color:var(--ink-hi);min-width:150px;cursor:pointer;
+  transition:border-color .2s ease;
+}
+select:hover{border-color:var(--blue-neon);}
+.select-wrap::after{
+  content:'';position:absolute;right:12px;top:50%;width:8px;height:8px;
+  border-right:2px solid var(--ink-lo);border-bottom:2px solid var(--ink-lo);
+  transform:translateY(-65%) rotate(45deg);pointer-events:none;
+}
+
+/* ============== THEME SWATCHES ============== */
+.theme-row{display:flex;gap:12px;}
+.theme-swatch{
+  width:40px;height:40px;border-radius:10px;border:2px solid transparent;cursor:pointer;position:relative;
+  transition:transform .2s ease,border-color .2s ease;
+}
+.theme-swatch:hover{transform:translateY(-3px);}
+.theme-swatch.active{border-color:var(--blue-neon);box-shadow:0 0 14px rgba(79,216,255,.4);}
+.theme-swatch.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+
+/* ============== ACCOUNT ============== */
+.account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px 0;}
+@media(max-width:600px){.account-grid{grid-template-columns:1fr;}}
+.field label{display:block;font-family:var(--font-ui);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px;}
+.field input[type="text"],.field input[type="email"]{
+  width:100%;background:var(--stone);border:1px solid var(--line);border-radius:8px;
+  padding:11px 14px;color:var(--ink-hi);font-size:.96rem;transition:border-color .2s ease;
+}
+.field input:focus{outline:none;border-color:var(--blue-neon);}
+.account-actions{display:flex;gap:12px;padding-bottom:22px;flex-wrap:wrap;}
+.btn{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:11px 22px;border-radius:2px;display:inline-flex;align-items:center;gap:8px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+.btn:hover{transform:translateY(-2px);}
+.btn-primary{color:var(--void);background:linear-gradient(120deg,var(--blue-neon),var(--violet-neon));font-weight:700;box-shadow:0 0 18px rgba(79,216,255,.3);}
+.btn-ghost{border:1px solid var(--line);color:var(--ink-hi);}
+.btn-danger{border:1px solid rgba(255,84,112,.4);color:var(--danger);}
+.btn-danger:hover{background:rgba(255,84,112,.08);}
+
+.save-toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);z-index:50;
+  padding:12px 22px;border-radius:10px;background:rgba(15,18,32,.95);border:1px solid rgba(78,224,138,.4);
+  color:var(--ink-hi);font-family:var(--font-ui);font-size:.75rem;letter-spacing:.08em;
+  opacity:0;visibility:hidden;transition:opacity .3s ease,transform .3s ease,visibility .3s ease;
+  display:flex;align-items:center;gap:8px;
+}
+.save-toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.save-toast svg{width:15px;height:15px;stroke:#4ee08a;}
+
+footer{padding:40px 0;text-align:center;color:var(--ink-faint);font-size:.85rem;border-top:1px solid var(--line);margin-top:10px;}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+
+<header class="top-nav">
+  <div class="nav-row">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="url(#g1)" stroke-width="1.4"/><circle cx="20" cy="20" r="6" fill="url(#g1)" opacity=".85"/><defs><linearGradient id="g1" x1="0" y1="0" x2="40" y2="40"><stop offset="0" stop-color="#4fd8ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
+      Arena of Minds
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="debate-room.html">Debate</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="achievements.html">Achievements</a>
+      <a href="settings.html" class="active">Settings</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="page-head reveal">
+      <p class="eyebrow">Arena Configuration</p>
+      <h1>Settings</h1>
+    </div>
+
+    <!-- AUDIO -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19 9a5 5 0 0 1 0 6M22 6a9 9 0 0 1 0 12"/></svg>Audio</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Music Volume</span><span class="sl-desc">Ambient score and chamber music.</span></div>
+        <div class="setting-control">
+          <div class="slider-wrap">
+            <input type="range" id="music-vol" min="0" max="100" value="70" aria-label="Music volume">
+            <span class="slider-val" id="music-vol-val">70%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Sound Effects</span><span class="sl-desc">UI clicks, hits, and debate impact sounds.</span></div>
+        <div class="setting-control">
+          <div class="slider-wrap">
+            <input type="range" id="sfx-vol" min="0" max="100" value="85" aria-label="Sound effects volume">
+            <span class="slider-val" id="sfx-vol-val">85%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Mute All Audio</span><span class="sl-desc">Silence music and effects entirely.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="mute-all"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMEPLAY -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>Gameplay</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Difficulty</span><span class="sl-desc">Affects opponent aggression and scoring thresholds.</span></div>
+        <div class="setting-control">
+          <div class="segmented" id="difficulty-seg" role="tablist" aria-label="Difficulty">
+            <button class="active" data-val="Easy">Easy</button>
+            <button data-val="Normal">Normal</button>
+            <button data-val="Hard">Hard</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Language</span><span class="sl-desc">Text and voice language used in the Arena.</span></div>
+        <div class="setting-control">
+          <div class="select-wrap">
+            <select id="language-select" aria-label="Language">
+              <option>English</option>
+              <option>Español</option>
+              <option>Français</option>
+              <option>Deutsch</option>
+              <option>日本語</option>
+              <option>Português</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Animations</span><span class="sl-desc">Cinematic transitions, particles and screen effects.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="animations-toggle" checked><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCESSIBILITY -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>Accessibility</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Reduce Motion</span><span class="sl-desc">Minimizes screen shake, particles, and parallax.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="reduce-motion"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">High Contrast</span><span class="sl-desc">Increases text and border contrast throughout the Arena.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="high-contrast"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Larger Text</span><span class="sl-desc">Increases chat and HUD text size.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="larger-text"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Screen Reader Optimizations</span><span class="sl-desc">Adds extra live-region announcements during debates.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="sr-opt" checked><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPEARANCE -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-4-4 4 4 0 0 1 4-4A10 10 0 0 0 12 2z"/></svg>Theme</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Arena Palette</span><span class="sl-desc">Choose the accent colors used across the Arena.</span></div>
+        <div class="setting-control">
+          <div class="theme-row" id="theme-row">
+            <div class="theme-swatch active" data-theme="void" style="background:linear-gradient(135deg,#4fd8ff,#a855f7);" title="Void (default)"></div>
+            <div class="theme-swatch" data-theme="ember" style="background:linear-gradient(135deg,#ff785a,#d9b46a);" title="Ember"></div>
+            <div class="theme-swatch" data-theme="frost" style="background:linear-gradient(135deg,#4fd8ff,#9ef7c4);" title="Frost"></div>
+            <div class="theme-swatch" data-theme="royal" style="background:linear-gradient(135deg,#a855f7,#d9b46a);" title="Royal"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</h2>
+
+      <div class="account-grid">
+        <div class="field"><label for="acc-username">Username</label><input type="text" id="acc-username" value="K. Wyrenth"></div>
+        <div class="field"><label for="acc-email">Email</label><input type="email" id="acc-email" value="wyrenth@arenaofminds.game"></div>
+      </div>
+
+      <div class="account-actions">
+        <button class="btn btn-primary" id="save-account">Save Changes</button>
+        <button class="btn btn-ghost" id="reset-defaults">Reset to Defaults</button>
+        <button class="btn btn-danger" id="log-out">Log Out</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>© 2026 Arena of Minds. Settings are stored for this session only.</footer>
+
+<div class="save-toast" id="save-toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-text">Settings saved</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  function bindSlider(id, valId){
+    var el = document.getElementById(id);
+    var val = document.getElementById(valId);
+    function update(){
+      el.style.setProperty('--val', el.value + '%');
+      val.textContent = el.value + '%';
+    }
+    el.addEventListener('input', update);
+    update();
+  }
+  bindSlider('music-vol','music-vol-val');
+  bindSlider('sfx-vol','sfx-vol-val');
+
+  document.getElementById('mute-all').addEventListener('change', function(e){
+    var muted = e.target.checked;
+    ['music-vol','sfx-vol'].forEach(function(id){ document.getElementById(id).disabled = muted; });
+  });
+
+  var seg = document.getElementById('difficulty-seg');
+  seg.addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if(!btn) return;
+    seg.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+  });
+
+  var themeRow = document.getElementById('theme-row');
+  themeRow.addEventListener('click', function(e){
+    var sw = e.target.closest('.theme-swatch');
+    if(!sw) return;
+    themeRow.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.remove('active'); });
+    sw.classList.add('active');
+  });
+
+  function showToast(text){
+    var toast = document.getElementById('save-toast');
+    document.getElementById('toast-text').textContent = text;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+
+  document.getElementById('save-account').addEventListener('click', function(){ showToast('Settings saved'); });
+  document.getElementById('reset-defaults').addEventListener('click', function(){
+    document.getElementById('music-vol').value = 70;
+    document.getElementById('sfx-vol').value = 85;
+    document.getElementById('mute-all').checked = false;
+    document.getElementById('animations-toggle').checked = true;
+    document.getElementById('reduce-motion').checked = false;
+    document.getElementById('high-contrast').checked = false;
+    document.getElementById('larger-text').checked = false;
+    document.getElementById('sr-opt').checked = true;
+    document.getElementById('language-select').value = 'English';
+    seg.querySelectorAll('button').forEach(function(b){ b.classList.toggle('active', b.dataset.val==='Easy'); });
+    themeRow.querySelectorAll('.theme-swatch').forEach(function(s){ s.classList.toggle('active', s.dataset.theme==='void'); });
+    ['music-vol','sfx-vol'].forEach(function(id){
+      var el = document.getElementById(id);
+      el.disabled = false;
+      el.dispatchEvent(new Event('input'));
+    });
+    showToast('Restored defaults');
+  });
+  document.getElementById('log-out').addEventListener('click', function(){
+    window.location.href = 'index.html';
+  });
+
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); observer.unobserve(e.target); }
+    });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+
+})();
+</script>
+</body>
+</html>

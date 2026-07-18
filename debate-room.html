@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debate Chamber — Arena of Minds</title>
+<meta name="description" content="Face a legendary thinker in live debate. Your logic is the only weapon you brought.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================================
+   DESIGN TOKENS — shared with the Arena of Minds landing page
+   ========================================================================= */
+:root{
+  --void:#05060c;
+  --stone-deep:#0b0e1a;
+  --stone:#141828;
+  --stone-hi:#1c2136;
+  --blue-neon:#4fd8ff;
+  --blue-dim:#2a6f8a;
+  --violet-neon:#a855f7;
+  --violet-dim:#5b3080;
+  --gold-relic:#d9b46a;
+  --danger:#ff5470;
+  --ok:#4ee08a;
+  --ink-hi:#eef1fb;
+  --ink-lo:#8b93b3;
+  --ink-faint:#525a78;
+  --line:rgba(143,159,214,0.14);
+  --radius-s:6px;
+  --radius-m:14px;
+  --radius-l:24px;
+  --ease:cubic-bezier(.16,.8,.28,1);
+  --font-display:'Cinzel',serif;
+  --font-ui:'Orbitron',sans-serif;
+  --font-body:'Rajdhani',sans-serif;
+  /* current opponent accent — swapped by JS when the thinker changes */
+  --accent:#4fd8ff;
+  --accent-soft:rgba(79,216,255,.35);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--void);
+  color:var(--ink-hi);
+  font-family:var(--font-body);
+  font-size:16px;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input{font-family:inherit;}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;}
+::selection{background:var(--violet-neon);color:var(--void);}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+}
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--blue-neon);outline-offset:2px;border-radius:4px;
+}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* ambient backdrop */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(79,216,255,.10), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(168,85,247,.10), transparent 60%),
+    var(--void);
+}
+
+/* =========================================================================
+   SHELL
+   ========================================================================= */
+.shell{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;}
+.shell.shake{animation:room-shake .6s ease;}
+@keyframes room-shake{
+  10%,90%{transform:translate3d(-1px,0,0);}
+  20%,80%{transform:translate3d(2px,0,0);}
+  30%,50%,70%{transform:translate3d(-4px,0,0);}
+  40%,60%{transform:translate3d(4px,0,0);}
+}
+
+/* ============================= TOP HUD ============================= */
+.hud{
+  display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  padding:14px 22px;border-bottom:1px solid var(--line);
+  background:rgba(8,10,20,.75);backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+}
+.hud-back{
+  display:flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.68rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-lo);flex:0 0 auto;
+  padding:8px 10px;border-radius:6px;transition:color .2s ease,background .2s ease;
+}
+.hud-back:hover{color:var(--blue-neon);background:rgba(79,216,255,.08);}
+.hud-back svg{width:15px;height:15px;stroke:currentColor;}
+
+.hud-divider{width:1px;height:26px;background:var(--line);flex:0 0 auto;}
+
+.hud-stat{display:flex;align-items:center;gap:10px;flex:0 0 auto;}
+.hud-stat .hud-icon{
+  width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(79,216,255,.16),rgba(168,85,247,.08));
+  border:1px solid var(--line);flex:0 0 auto;
+}
+.hud-stat .hud-icon svg{width:15px;height:15px;stroke:var(--blue-neon);}
+.hud-label{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);}
+.hud-value{font-family:var(--font-ui);font-size:.92rem;color:var(--ink-hi);font-weight:600;}
+
+.hud-bar-group{min-width:150px;flex:1 1 150px;max-width:220px;}
+.hud-bar-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.hud-bar-track{height:8px;border-radius:5px;background:rgba(255,255,255,.06);overflow:hidden;position:relative;border:1px solid var(--line);}
+.hud-bar-fill{height:100%;border-radius:5px;transition:width .6s var(--ease);}
+.hud-bar-fill.xp{background:linear-gradient(90deg,var(--blue-neon),var(--violet-neon));box-shadow:0 0 10px rgba(79,216,255,.5);}
+.hud-bar-fill.escape{background:linear-gradient(90deg,var(--gold-relic),#ffe3a3);box-shadow:0 0 10px rgba(217,180,106,.5);}
+
+.hud-timer{margin-left:auto;display:flex;align-items:center;gap:10px;flex:0 0 auto;}
+.hud-timer .hud-value{font-family:var(--font-ui);font-size:1.15rem;letter-spacing:.05em;font-variant-numeric:tabular-nums;}
+.hud-timer.low .hud-value{color:var(--danger);animation:timer-pulse 1s ease-in-out infinite;}
+.hud-timer.low .hud-icon{border-color:var(--danger);}
+.hud-timer.low .hud-icon svg{stroke:var(--danger);}
+@keyframes timer-pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* ============================= MAIN SPLIT ============================= */
+.debate-main{flex:1;display:grid;grid-template-columns:min(380px,38vw) 1fr;overflow:hidden;}
+@media (max-width:860px){
+  .debate-main{grid-template-columns:1fr;grid-template-rows:auto 1fr;overflow-y:auto;}
+}
+
+/* ============================= LEFT: OPPONENT PANEL ============================= */
+.opponent-panel{
+  border-right:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(20,24,40,.5),rgba(8,10,20,.7));
+  padding:22px 20px 26px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;
+}
+@media (max-width:860px){.opponent-panel{border-right:none;border-bottom:1px solid var(--line);}}
+
+/* opponent switcher strip */
+.opp-switcher{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
+.opp-chip{
+  flex:0 0 auto;width:42px;height:42px;border-radius:50%;position:relative;
+  border:1px solid var(--line);background:var(--stone);
+  display:flex;align-items:center;justify-content:center;transition:transform .25s ease,border-color .25s ease;
+}
+.opp-chip::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid transparent;transition:border-color .25s ease;}
+.opp-chip svg{width:18px;height:18px;}
+.opp-chip:hover{transform:translateY(-2px);}
+.opp-chip.active{border-color:var(--accent);box-shadow:0 0 14px var(--accent-soft);}
+.opp-chip.active::after{border-color:var(--accent-soft);}
+
+/* portrait hologram — the "3D placeholder" */
+.portrait-frame{
+  position:relative;aspect-ratio:1/1;border-radius:var(--radius-l);
+  background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.04), transparent 70%), var(--stone-deep);
+  border:1px solid var(--line);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.portrait-frame .ring{position:absolute;border:1px solid var(--accent);border-radius:50%;opacity:.35;transform-origin:center;}
+.portrait-frame .ring.r1{inset:8%;animation:spin-slow 18s linear infinite;border-style:dashed;}
+.portrait-frame .ring.r2{inset:18%;animation:spin-slow-rev 12s linear infinite;opacity:.5;}
+@keyframes spin-slow{to{transform:rotate(360deg);}}
+@keyframes spin-slow-rev{to{transform:rotate(-360deg);}}
+
+.portrait-frame .glow{
+  position:absolute;width:70%;height:70%;border-radius:50%;
+  background:radial-gradient(circle, var(--accent-soft), transparent 70%);
+  filter:blur(6px);animation:pulse-soft 3.4s ease-in-out infinite;
+}
+@keyframes pulse-soft{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.08);}}
+
+.bust{position:relative;width:56%;z-index:2;filter:drop-shadow(0 0 18px var(--accent-soft));}
+.bust polygon{transition:fill .4s ease;}
+
+.scan-line{
+  position:absolute;left:6%;right:6%;height:2px;top:0;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  animation:portrait-scan 2.6s linear infinite;opacity:.7;
+}
+@keyframes portrait-scan{0%{top:6%;}100%{top:94%;}}
+
+.spark{position:absolute;bottom:4%;width:3px;height:3px;border-radius:50%;background:var(--accent);opacity:0;animation:spark-rise 3.2s ease-in infinite;}
+@keyframes spark-rise{0%{opacity:0;transform:translateY(0);}15%{opacity:.9;}100%{opacity:0;transform:translateY(-85%);}}
+
+.portrait-tag{
+  position:absolute;bottom:10px;left:10px;font-family:var(--font-ui);font-size:.6rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);
+  border:1px solid var(--line);padding:4px 8px;border-radius:20px;background:rgba(5,6,12,.5);
+}
+
+/* identity block */
+.opp-identity{text-align:center;}
+.opp-identity h1{font-size:1.5rem;text-transform:uppercase;letter-spacing:.03em;}
+.opp-identity .opp-role{
+  font-family:var(--font-ui);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);margin-top:4px;
+}
+.difficulty-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-family:var(--font-ui);font-size:.62rem;letter-spacing:.14em;color:var(--ink-faint);}
+.diff-stars{display:flex;gap:3px;}
+.diff-stars i{width:8px;height:8px;background:var(--ink-faint);transform:rotate(45deg);}
+.diff-stars i.filled{background:var(--gold-relic);box-shadow:0 0 6px var(--gold-relic);}
+
+/* stat blocks */
+.stat-block{display:flex;flex-direction:column;gap:8px;}
+.stat-block-top{display:flex;justify-content:space-between;align-items:baseline;}
+.stat-block-top .lab{font-family:var(--font-ui);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);}
+.stat-block-top .val{font-family:var(--font-ui);font-size:.78rem;color:var(--ink-hi);}
+.hp-track{height:14px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line);overflow:hidden;position:relative;}
+.hp-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#4ee08a,#9ef7c4);transition:width .7s var(--ease), background .5s ease;box-shadow:0 0 10px rgba(78,224,138,.4);}
+.hp-fill.mid{background:linear-gradient(90deg,var(--gold-relic),#ffe3a3);box-shadow:0 0 10px rgba(217,180,106,.4);}
+.hp-fill.low{background:linear-gradient(90deg,var(--danger),#ff9bb0);box-shadow:0 0 10px rgba(255,84,112,.5);}
+.hp-track .hp-ticks{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0 9%,rgba(0,0,0,.25) 9% 10%);}
+
+/* mood */
+.mood-chip{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:20px;
+  background:var(--stone);border:1px solid var(--line);width:fit-content;transition:border-color .3s ease;
+}
+.mood-chip .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:mood-blink 1.6s ease-in-out infinite;}
+@keyframes mood-blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+.mood-chip span.mood-word{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
+
+/* special ability */
+.ability-card{
+  position:relative;border-radius:var(--radius-m);border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(255,255,255,.03),transparent);
+  padding:16px 16px 16px 14px;display:flex;gap:14px;align-items:center;
+}
+.ability-ring-btn{
+  position:relative;flex:0 0 auto;width:56px;height:56px;border-radius:50%;
+  background:conic-gradient(var(--accent) calc(var(--cd,0) * 1%), rgba(255,255,255,.08) 0);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s ease;
+}
+.ability-ring-btn:not(:disabled):hover{transform:scale(1.06);}
+.ability-ring-btn:disabled{cursor:not-allowed;opacity:.85;}
+.ability-ring-inner{
+  width:44px;height:44px;border-radius:50%;background:var(--stone-deep);
+  display:flex;align-items:center;justify-content:center;
+}
+.ability-ring-inner svg{width:20px;height:20px;stroke:var(--accent);}
+.ability-cd-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-ui);font-size:.7rem;color:var(--ink-hi);background:rgba(5,6,12,.55);border-radius:50%;opacity:0;transition:opacity .2s ease;}
+.ability-ring-btn:disabled .ability-cd-text{opacity:1;}
+.ability-text h3{font-size:.95rem;letter-spacing:.02em;}
+.ability-text p{color:var(--ink-lo);font-size:.82rem;margin-top:3px;line-height:1.4;}
+
+/* ============================= RIGHT: CHAT PANEL ============================= */
+.chat-panel{display:flex;flex-direction:column;min-height:0;}
+.chat-header{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:14px 24px;border-bottom:1px solid var(--line);background:rgba(8,10,20,.4);
+}
+.chat-header h2{font-size:1.05rem;letter-spacing:.02em;}
+.clarity-group{display:flex;align-items:center;gap:10px;min-width:160px;}
+.clarity-group .hud-label{white-space:nowrap;}
+.clarity-track{flex:1;height:8px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid var(--line);overflow:hidden;}
+.clarity-fill{height:100%;border-radius:5px;width:82%;background:linear-gradient(90deg,var(--blue-neon),var(--violet-neon));box-shadow:0 0 8px rgba(79,216,255,.5);transition:width .6s var(--ease);}
+
+.chat-scroll{
+  flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px;
+  scrollbar-width:thin;scrollbar-color:var(--violet-dim) transparent;
+}
+.chat-scroll::-webkit-scrollbar{width:6px;}
+.chat-scroll::-webkit-scrollbar-thumb{background:var(--violet-dim);border-radius:4px;}
+
+.msg{max-width:min(560px,80%);display:flex;flex-direction:column;gap:5px;animation:msg-in .35s var(--ease) both;}
+@keyframes msg-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.msg.ai{align-self:flex-start;}
+.msg.player{align-self:flex-end;}
+.msg-meta{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+.msg.player .msg-meta{text-align:right;}
+.bubble{
+  padding:13px 16px;border-radius:16px;font-size:1rem;line-height:1.5;position:relative;
+}
+.msg.ai .bubble{
+  background:linear-gradient(160deg,rgba(79,216,255,.09),rgba(20,24,40,.7));
+  border:1px solid rgba(79,216,255,.22);border-bottom-left-radius:4px;color:var(--ink-hi);
+}
+.msg.player .bubble{
+  background:linear-gradient(160deg,rgba(168,85,247,.22),rgba(90,40,140,.28));
+  border:1px solid rgba(168,85,247,.35);border-bottom-right-radius:4px;color:var(--ink-hi);
+}
+.bubble .caret{display:inline-block;width:2px;height:1em;background:var(--blue-neon);vertical-align:-2px;margin-left:2px;animation:caret-blink .85s step-end infinite;}
+@keyframes caret-blink{50%{opacity:0;}}
+
+.typing-row{display:flex;align-items:center;gap:6px;padding:4px 2px;}
+.typing-dots{display:flex;gap:4px;padding:12px 16px;border-radius:16px;border-bottom-left-radius:4px;background:rgba(20,24,40,.7);border:1px solid rgba(79,216,255,.2);width:fit-content;}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--blue-neon);animation:dot-bounce 1.1s ease-in-out infinite;}
+.typing-dots span:nth-child(2){animation-delay:.15s;}
+.typing-dots span:nth-child(3){animation-delay:.3s;}
+@keyframes dot-bounce{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-5px);opacity:1;}}
+
+/* input dock */
+.input-dock{border-top:1px solid var(--line);padding:16px 24px 20px;background:rgba(8,10,20,.55);position:relative;}
+.hint-pop,.inv-pop{
+  position:absolute;bottom:100%;margin-bottom:10px;
+  background:rgba(15,18,32,.96);border:1px solid var(--line);border-radius:var(--radius-m);
+  padding:16px;box-shadow:0 24px 50px -20px rgba(0,0,0,.7);
+  opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease,visibility .25s ease;
+}
+.hint-pop.open,.inv-pop.open{opacity:1;visibility:visible;transform:translateY(0);}
+.hint-pop{left:24px;width:min(320px,80vw);}
+.hint-pop p{font-size:.92rem;color:var(--ink-lo);}
+.hint-pop .hint-eyebrow{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.16em;color:var(--gold-relic);text-transform:uppercase;margin-bottom:8px;}
+
+.inv-pop{right:24px;width:min(300px,80vw);}
+.inv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.inv-item{
+  aspect-ratio:1/1;border-radius:10px;border:1px solid var(--line);background:var(--stone);
+  display:flex;align-items:center;justify-content:center;position:relative;transition:border-color .2s ease,transform .2s ease;
+}
+.inv-item:hover{border-color:var(--blue-neon);transform:translateY(-2px);}
+.inv-item svg{width:22px;height:22px;stroke:var(--blue-neon);}
+.inv-item .count{position:absolute;bottom:3px;right:5px;font-family:var(--font-ui);font-size:.6rem;color:var(--ink-lo);}
+.inv-title{font-family:var(--font-ui);font-size:.6rem;letter-spacing:.16em;color:var(--ink-hi);text-transform:uppercase;margin-bottom:12px;}
+
+.input-row{display:flex;align-items:center;gap:10px;}
+.icon-btn{
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--stone);
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;position:relative;
+  transition:border-color .25s ease,transform .2s ease,background .25s ease;
+}
+.icon-btn:hover{border-color:var(--blue-neon);transform:translateY(-2px);}
+.icon-btn svg{width:18px;height:18px;stroke:var(--ink-hi);}
+.icon-btn.active{border-color:var(--danger);background:rgba(255,84,112,.12);}
+.icon-btn.active svg{stroke:var(--danger);}
+.icon-btn.active::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(255,84,112,.5);
+  animation:mic-pulse 1.2s ease-out infinite;
+}
+@keyframes mic-pulse{0%{transform:scale(.9);opacity:1;}100%{transform:scale(1.4);opacity:0;}}
+
+.text-input-wrap{flex:1;position:relative;}
+#chat-input{
+  width:100%;background:var(--stone);border:1px solid var(--line);border-radius:24px;
+  padding:12px 52px 12px 20px;color:var(--ink-hi);font-size:1rem;font-family:var(--font-body);
+  transition:border-color .25s ease,box-shadow .25s ease;
+}
+#chat-input:focus{outline:none;border-color:var(--blue-neon);box-shadow:0 0 0 3px rgba(79,216,255,.12);}
+#chat-input::placeholder{color:var(--ink-faint);}
+
+.send-btn{
+  width:44px;height:44px;border-radius:50%;flex:0 0 auto;
+  background:linear-gradient(120deg,var(--blue-neon),var(--violet-neon));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(79,216,255,.35);transition:transform .2s ease,box-shadow .2s ease;
+}
+.send-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 26px rgba(168,85,247,.5);}
+.send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.send-btn svg{width:17px;height:17px;stroke:var(--void);}
+
+/* shared button utility (used by scoring/victory/defeat overlays) */
+.btn{font-family:var(--font-ui);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;padding:12px 22px;border-radius:2px;display:inline-flex;align-items:center;gap:8px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;}
+.btn:hover{transform:translateY(-2px);}
+.btn-primary{color:var(--void);background:linear-gradient(120deg,var(--blue-neon),var(--violet-neon));font-weight:700;box-shadow:0 0 20px rgba(79,216,255,.3);}
+.btn-primary:hover{box-shadow:0 0 30px rgba(168,85,247,.5);}
+.btn-ghost{border:1px solid var(--line);color:var(--ink-hi);}
+.btn-ghost:hover{border-color:var(--blue-neon);}
+.btn-gold{color:var(--void);background:linear-gradient(120deg,var(--gold-relic),#ffe3a3);font-weight:700;box-shadow:0 0 20px rgba(217,180,106,.35);}
+.btn-gold:hover{box-shadow:0 0 30px rgba(255,216,138,.5);}
+
+.hud-nav-link{
+  display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;
+  border:1px solid var(--line);color:var(--ink-lo);flex:0 0 auto;transition:border-color .2s ease,color .2s ease;
+}
+.hud-nav-link:hover{border-color:var(--blue-neon);color:var(--blue-neon);}
+.hud-nav-link svg{width:15px;height:15px;stroke:currentColor;}
+
+/* ============================= AI THINKING SEQUENCE ============================= */
+.thinking-row{display:flex;flex-direction:column;gap:6px;padding:2px 2px;}
+.thinking-card{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:16px;border-bottom-left-radius:4px;
+  background:rgba(20,24,40,.7);border:1px solid rgba(79,216,255,.2);width:fit-content;max-width:90%;
+}
+.thinking-spinner{
+  width:14px;height:14px;border-radius:50%;flex:0 0 auto;
+  border:2px solid rgba(79,216,255,.25);border-top-color:var(--blue-neon);
+  animation:think-spin .8s linear infinite;
+}
+@keyframes think-spin{to{transform:rotate(360deg);}}
+.thinking-text{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.08em;color:var(--blue-neon);
+  position:relative;min-width:1px;white-space:nowrap;}
+.thinking-text .tphrase{display:inline-block;opacity:0;transform:translateY(4px);animation:tphrase-in .35s ease forwards;}
+@keyframes tphrase-in{to{opacity:1;transform:translateY(0);}}
+
+/* ============================= SCORING OVERLAY ============================= */
+.scoring-overlay{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  background:rgba(5,6,12,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease;padding:20px;
+}
+.scoring-overlay.show{opacity:1;visibility:visible;}
+.scoring-card{
+  width:min(430px,100%);padding:32px 30px;border-radius:var(--radius-l);position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(20,24,40,.88),rgba(8,10,20,.94));border:1px solid var(--line);
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.7);
+  transform:scale(.94);transition:transform .35s var(--ease);
+}
+.scoring-overlay.show .scoring-card{transform:scale(1);}
+.scoring-card.shake{animation:card-shake .4s ease;}
+@keyframes card-shake{0%,100%{transform:translateX(0) scale(1);}20%{transform:translateX(-8px) scale(1);}40%{transform:translateX(7px) scale(1);}60%{transform:translateX(-5px) scale(1);}80%{transform:translateX(4px) scale(1);}}
+.scoring-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(79,216,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(79,216,255,.05) 1px,transparent 1px);
+  background-size:26px 26px;mask-image:radial-gradient(ellipse at center, black 40%, transparent 90%);
+}
+.scoring-head{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;position:relative;z-index:1;}
+.scoring-head span.eyebrow2{font-family:var(--font-ui);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-neon);}
+.scoring-head .typing-dots{padding:0;border:none;background:none;}
+
+.score-rows{display:flex;flex-direction:column;gap:14px;position:relative;z-index:1;margin-bottom:26px;}
+.score-row-top{display:flex;justify-content:space-between;margin-bottom:6px;font-family:var(--font-ui);font-size:.68rem;letter-spacing:.08em;color:var(--ink-lo);text-transform:uppercase;}
+.score-val{color:var(--ink-hi);font-weight:700;}
+.score-track{height:8px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid var(--line);overflow:hidden;}
+.score-fill{height:100%;width:0%;border-radius:5px;background:linear-gradient(90deg,#4ee08a,#9ef7c4);box-shadow:0 0 8px rgba(78,224,138,.4);transition:width .5s ease,background .3s ease;}
+.score-fill.mid{background:linear-gradient(90deg,var(--gold-relic),#ffe3a3);box-shadow:0 0 8px rgba(217,180,106,.4);}
+.score-fill.low{background:linear-gradient(90deg,var(--danger),#ff9bb0);box-shadow:0 0 8px rgba(255,84,112,.4);}
+
+.overall-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;z-index:1;}
+.overall-ring{
+  --pct:0;width:118px;height:118px;border-radius:50%;position:relative;
+  background:conic-gradient(var(--score-color,var(--blue-neon)) calc(var(--pct) * 1%), rgba(255,255,255,.08) 0);
+}
+.overall-ring::before{content:'';position:absolute;inset:8px;border-radius:50%;background:var(--stone-deep);}
+.overall-num-wrap{position:absolute;inset:0;display:flex;align-items:baseline;justify-content:center;gap:2px;font-family:var(--font-ui);}
+.overall-num{font-size:2rem;font-weight:700;color:var(--ink-hi);}
+.overall-max{font-size:.85rem;color:var(--ink-faint);}
+.overall-tag{
+  font-family:var(--font-ui);font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:8px 16px;border-radius:20px;opacity:0;transform:scale(.8);transition:opacity .3s ease,transform .3s var(--ease);
+}
+.overall-tag.show{opacity:1;transform:scale(1);}
+.overall-tag.win{color:var(--ok);border:1px solid rgba(78,224,138,.4);background:rgba(78,224,138,.08);}
+.overall-tag.lose{color:var(--danger);border:1px solid rgba(255,84,112,.4);background:rgba(255,84,112,.08);}
+.msg.player .bubble.flash-win{animation:bubble-win-flash 1s ease;}
+.msg.player .bubble.flash-lose{animation:bubble-lose-flash 1s ease;}
+@keyframes bubble-win-flash{0%{box-shadow:0 0 0 0 rgba(78,224,138,.6);}100%{box-shadow:0 0 0 14px rgba(78,224,138,0);}}
+@keyframes bubble-lose-flash{0%{box-shadow:0 0 0 0 rgba(255,84,112,.6);}100%{box-shadow:0 0 0 14px rgba(255,84,112,0);}}
+
+/* ============================= FULL-SCREEN VICTORY ============================= */
+.victory-overlay{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  background:#000;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s ease;overflow:hidden;
+}
+.victory-overlay.show{opacity:1;visibility:visible;}
+.victory-glow{
+  position:absolute;inset:-20%;
+  background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,220,140,.35), transparent 65%);
+  opacity:0;animation:golden-pulse 3.5s ease-in-out infinite;
+}
+.victory-overlay.show .victory-glow{opacity:1;}
+@keyframes golden-pulse{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:.9;transform:scale(1.08);}}
+.victory-portal{
+  position:absolute;left:50%;top:38%;width:260px;height:260px;border-radius:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:radial-gradient(circle,#fff7e0 0%,#ffd88a 25%,rgba(217,180,106,.5) 55%,transparent 75%);
+  transition:transform 1.1s var(--ease);
+}
+.victory-overlay.show .victory-portal{transform:translate(-50%,-50%) scale(1);}
+.victory-portal .vring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,235,190,.6);animation:spin-slow 10s linear infinite;}
+.victory-portal .vring.v2{inset:16px;animation:spin-slow-rev 7s linear infinite;border-style:dashed;}
+
+.confetti-field{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.confetti-bit{position:absolute;top:-5%;width:8px;height:14px;opacity:0;border-radius:2px;animation:confetti-fall linear forwards;}
+@keyframes confetti-fall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg);}
+  100%{opacity:.9;transform:translateY(115vh) rotate(540deg);}
+}
+
+.victory-content{
+  position:relative;z-index:2;text-align:center;max-width:480px;padding:30px;
+  opacity:0;transform:translateY(24px);transition:opacity .6s var(--ease),transform .6s var(--ease);
+}
+.victory-overlay.show .victory-content{opacity:1;transform:translateY(0);transition-delay:.9s;}
+.victory-content .eyebrow2{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.35em;color:var(--gold-relic);text-transform:uppercase;}
+.victory-title{
+  font-size:clamp(2.2rem,6vw,3.2rem);text-transform:uppercase;margin:12px 0 22px;letter-spacing:.04em;
+  background:linear-gradient(100deg,#fff7e0,#ffd88a 40%,var(--blue-neon) 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 20px rgba(255,216,138,.4));
+}
+.achievement-card{
+  display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:var(--radius-m);
+  background:rgba(255,216,138,.08);border:1px solid rgba(255,216,138,.35);margin-bottom:22px;text-align:left;
+}
+.achievement-icon{
+  width:44px;height:44px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(255,216,138,.3),rgba(217,180,106,.1));border:1px solid rgba(255,216,138,.4);
+}
+.achievement-icon svg{width:22px;height:22px;stroke:var(--gold-relic);}
+.achievement-text .ach-label{font-family:var(--font-ui);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);}
+.achievement-text .ach-name{font-family:var(--font-display);font-size:1.1rem;color:var(--gold-relic);margin-top:2px;}
+
+.victory-rewards{display:flex;justify-content:center;gap:26px;margin-bottom:24px;flex-wrap:wrap;}
+.reward-stat{text-align:center;}
+.reward-stat .rv{font-family:var(--font-ui);font-size:1.5rem;font-weight:700;color:var(--ink-hi);}
+.reward-stat .rl{font-family:var(--font-ui);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+.next-opponent-line{
+  font-family:var(--font-ui);font-size:.72rem;letter-spacing:.1em;color:var(--ink-lo);text-transform:uppercase;
+  margin-bottom:26px;
+}
+.next-opponent-line span{color:var(--blue-neon);}
+
+/* ============================= FULL-SCREEN DEFEAT ============================= */
+.defeat-overlay{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  background:#000;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s ease;overflow:hidden;
+}
+.defeat-overlay.show{opacity:1;visibility:visible;}
+.defeat-vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, #000 90%),
+             radial-gradient(ellipse 40% 30% at 50% 40%, rgba(255,84,112,.12), transparent 70%);
+}
+.crack-svg{position:absolute;inset:0;width:100%;height:100%;opacity:0;}
+.defeat-overlay.show .crack-svg{opacity:1;}
+.crack-path{fill:none;stroke:rgba(255,84,112,.55);stroke-width:1.4;stroke-dasharray:600;stroke-dashoffset:600;filter:drop-shadow(0 0 6px rgba(255,84,112,.5));}
+.defeat-overlay.show .crack-path{animation:crack-draw 1.1s ease forwards;}
+.crack-path.c2{animation-delay:.15s;}
+.crack-path.c3{animation-delay:.3s;}
+.crack-path.c4{animation-delay:.45s;}
+@keyframes crack-draw{to{stroke-dashoffset:0;}}
+
+.defeat-content{
+  position:relative;z-index:2;text-align:center;max-width:440px;padding:30px;
+  opacity:0;transform:scale(.9);transition:opacity .5s ease,transform .5s var(--ease);
+}
+.defeat-overlay.show .defeat-content{opacity:1;transform:scale(1);transition-delay:.7s;}
+.defeat-laugh{
+  font-family:var(--font-display);font-style:italic;color:var(--ink-faint);font-size:1rem;margin-bottom:10px;
+  opacity:0;
+}
+.defeat-overlay.show .defeat-laugh{animation:laugh-fade 1.6s ease forwards;animation-delay:1s;}
+@keyframes laugh-fade{0%{opacity:0;letter-spacing:.4em;}30%{opacity:.8;}100%{opacity:.55;letter-spacing:.08em;}}
+.defeat-title{
+  font-size:clamp(1.7rem,5vw,2.4rem);text-transform:uppercase;color:var(--danger);margin-bottom:22px;
+  text-shadow:0 0 24px rgba(255,84,112,.5);letter-spacing:.03em;
+}
+.lives-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:30px;}
+.lives-row .hud-label{color:var(--ink-faint);}
+.lives-hearts{display:flex;gap:6px;}
+.lives-hearts svg{width:20px;height:20px;stroke:var(--danger);fill:none;stroke-width:2;transition:fill .3s ease,opacity .3s ease;}
+.lives-hearts svg.filled{fill:var(--danger);}
+.lives-hearts svg.lost{opacity:.25;}
+.defeat-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+@media (max-width:600px){
+  .hud{gap:14px;padding:12px 14px;}
+  .hud-bar-group{display:none;}
+  .chat-header{padding:12px 16px;}
+  .chat-scroll{padding:16px;}
+  .input-dock{padding:12px 14px 16px;}
+  .victory-rewards{gap:16px;}
+}
+
+</style>
+</head>
+<body>
+
+<div id="bg" aria-hidden="true"></div>
+
+<div class="shell">
+
+  <!-- ============================= TOP HUD ============================= -->
+  <header class="hud" aria-label="Player status">
+    <a class="hud-back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Leave Chamber
+    </a>
+    <a class="hud-nav-link" href="leaderboard.html" aria-label="Leaderboard" title="Leaderboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M6 21V9l6-6 6 6v12"/></svg>
+    </a>
+    <a class="hud-nav-link" href="achievements.html" aria-label="Achievements" title="Achievements">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a2 2 0 0 0 0 4h1M17 6h3a2 2 0 0 1 0 4h-1"/></svg>
+    </a>
+    <div class="hud-divider" aria-hidden="true"></div>
+
+    <div class="hud-stat">
+      <span class="hud-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg></span>
+      <div><div class="hud-label">Level</div><div class="hud-value" id="stat-level">7</div></div>
+    </div>
+
+    <div class="hud-bar-group">
+      <div class="hud-bar-top"><span class="hud-label">XP</span><span class="hud-value" id="xp-text">1,240 / 2,000</span></div>
+      <div class="hud-bar-track"><div class="hud-bar-fill xp" id="xp-fill" style="width:62%"></div></div>
+    </div>
+
+    <div class="hud-bar-group">
+      <div class="hud-bar-top"><span class="hud-label">Escape Progress</span><span class="hud-value" id="escape-text">34%</span></div>
+      <div class="hud-bar-track"><div class="hud-bar-fill escape" id="escape-fill" style="width:34%"></div></div>
+    </div>
+
+    <div class="hud-stat">
+      <span class="hud-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
+      <div><div class="hud-label">Coins</div><div class="hud-value" id="stat-coins">312</div></div>
+    </div>
+
+    <div class="hud-timer" id="hud-timer">
+      <span class="hud-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg></span>
+      <div><div class="hud-label">Time Remaining</div><div class="hud-value" id="timer-text">09:42</div></div>
+    </div>
+  </header>
+
+  <!-- ============================= MAIN SPLIT ============================= -->
+  <div class="debate-main">
+
+    <!-- ===================== LEFT: OPPONENT PANEL ===================== -->
+    <aside class="opponent-panel" aria-label="Opponent status">
+
+      <div class="opp-switcher" id="opp-switcher" role="tablist" aria-label="Choose opponent"></div>
+
+      <div class="portrait-frame">
+        <div class="ring r1" aria-hidden="true"></div>
+        <div class="ring r2" aria-hidden="true"></div>
+        <div class="glow" aria-hidden="true"></div>
+        <div class="scan-line" aria-hidden="true"></div>
+        <span class="spark" style="left:22%;animation-delay:0s;"></span>
+        <span class="spark" style="left:52%;animation-delay:1s;"></span>
+        <span class="spark" style="left:74%;animation-delay:2s;"></span>
+
+        <!-- low-poly "3D style" bust placeholder -->
+        <svg class="bust" viewBox="0 0 200 200" id="bust-svg" aria-hidden="true">
+          <polygon points="100,20 130,55 100,80 70,55" fill="var(--accent)" opacity=".9"/>
+          <polygon points="70,55 100,80 90,120 55,95" fill="var(--accent)" opacity=".65"/>
+          <polygon points="130,55 100,80 110,120 145,95" fill="var(--accent)" opacity=".5"/>
+          <polygon points="55,95 90,120 80,170 30,175 25,120" fill="var(--accent)" opacity=".35"/>
+          <polygon points="145,95 110,120 120,170 170,175 175,120" fill="var(--accent)" opacity=".22"/>
+          <polygon points="80,170 120,170 130,200 70,200" fill="var(--accent)" opacity=".18"/>
+          <polygon points="90,120 110,120 120,170 80,170" fill="var(--accent)" opacity=".75"/>
+        </svg>
+
+        <span class="portrait-tag">CORE UPLINK STABLE</span>
+      </div>
+
+      <div class="opp-identity">
+        <h1 id="opp-name">Socrates</h1>
+        <p class="opp-role" id="opp-role">The Philosopher</p>
+        <div class="difficulty-row">
+          DIFFICULTY
+          <span class="diff-stars" id="opp-diff" aria-label="Difficulty 3 out of 5"></span>
+        </div>
+      </div>
+
+      <div class="stat-block" aria-label="Opponent resolve">
+        <div class="stat-block-top"><span class="lab">Resolve</span><span class="val" id="hp-text">100%</span></div>
+        <div class="hp-track"><div class="hp-ticks" aria-hidden="true"></div><div class="hp-fill" id="hp-fill" style="width:100%"></div></div>
+      </div>
+
+      <div class="mood-chip">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="hud-label">Mood</span>
+        <span class="mood-word" id="mood-word">Composed</span>
+      </div>
+
+      <div class="ability-card">
+        <button class="ability-ring-btn" id="ability-btn" style="--cd:0" aria-label="Use special ability: Socratic Trap">
+          <span class="ability-ring-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5z"/></svg>
+          </span>
+          <span class="ability-cd-text" id="ability-cd-text">18s</span>
+        </button>
+        <div class="ability-text">
+          <h3 id="ability-name">Socratic Trap</h3>
+          <p id="ability-desc">Force a contradiction in their last claim for bonus damage to their resolve.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===================== RIGHT: CHAT PANEL ===================== -->
+    <section class="chat-panel" aria-label="Debate transcript">
+      <div class="chat-header">
+        <h2>Chamber 03 — Live Debate</h2>
+        <div class="clarity-group" aria-label="Your clarity">
+          <span class="hud-label">Your Clarity</span>
+          <div class="clarity-track"><div class="clarity-fill" id="clarity-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="chat-scroll" id="chat-scroll" role="log" aria-live="polite" aria-label="Debate messages"></div>
+
+      <div class="input-dock">
+        <div class="hint-pop" id="hint-pop">
+          <p class="hint-eyebrow">Debate Tip</p>
+          <p id="hint-text">Question his premise before he questions yours — Socrates wins by making you define your terms.</p>
+        </div>
+        <div class="inv-pop" id="inv-pop">
+          <p class="inv-title">Inventory</p>
+          <div class="inv-grid">
+            <div class="inv-item" title="Logic Shield — blocks one rebuttal"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg><span class="count">2</span></div>
+            <div class="inv-item" title="Rhetorical Dagger — sharpens your next reply"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-7-7z M5 19l3-1 1-3"/></svg><span class="count">1</span></div>
+            <div class="inv-item" title="Time Dilation — adds 60s to the clock"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg><span class="count">1</span></div>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <button class="icon-btn" id="mic-btn" aria-label="Speak your argument" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v4M8 22h8"/></svg>
+          </button>
+
+          <div class="text-input-wrap">
+            <label for="chat-input" class="sr-only">Type your argument</label>
+            <input type="text" id="chat-input" placeholder="Present your argument…" autocomplete="off">
+          </div>
+
+          <button class="icon-btn" id="hint-btn" aria-label="Show debate hint" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.6.5 1 1.3 1 2.2V16h6v-1.3c0-.9.4-1.7 1-2.2A6 6 0 0 0 12 2z"/></svg>
+          </button>
+
+          <button class="icon-btn" id="inv-btn" aria-label="Open inventory" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3zM3 7l3-4h12l3 4M9 11a3 3 0 0 0 6 0"/></svg>
+          </button>
+
+          <button class="send-btn" id="send-btn" aria-label="Send argument">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============================= SCORING OVERLAY ============================= -->
+<div class="scoring-overlay" id="scoring-overlay" role="dialog" aria-live="polite" aria-label="Argument analysis">
+  <div class="scoring-card" id="scoring-card">
+    <div class="scoring-head">
+      <span class="eyebrow2">Analyzing Argument</span>
+      <span class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    </div>
+
+    <div class="score-rows" id="score-rows">
+      <div class="score-row" data-metric="Logic">
+        <div class="score-row-top"><span>Logic</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Evidence">
+        <div class="score-row-top"><span>Evidence</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Creativity">
+        <div class="score-row-top"><span>Creativity</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Persuasion">
+        <div class="score-row-top"><span>Persuasion</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Confidence">
+        <div class="score-row-top"><span>Confidence</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+    </div>
+
+    <div class="overall-wrap">
+      <div class="overall-ring" id="overall-ring">
+        <div class="overall-num-wrap"><span class="overall-num" id="overall-num">0</span><span class="overall-max">/100</span></div>
+      </div>
+      <p class="overall-tag" id="overall-tag">Argument Lands</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= FULL-SCREEN VICTORY ============================= -->
+<div class="victory-overlay" id="victory-overlay" role="dialog" aria-modal="true" aria-labelledby="victory-heading">
+  <div class="victory-glow" aria-hidden="true"></div>
+  <div class="victory-portal" aria-hidden="true"><span class="vring"></span><span class="vring v2"></span></div>
+  <div class="confetti-field" id="confetti-field" aria-hidden="true"></div>
+
+  <div class="victory-content">
+    <p class="eyebrow2">Room Cleared</p>
+    <h2 class="victory-title" id="victory-heading">ROOM CLEARED</h2>
+
+    <div class="achievement-card">
+      <span class="achievement-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a2 2 0 0 0 0 4h1M17 6h3a2 2 0 0 1 0 4h-1"/></svg>
+      </span>
+      <span class="achievement-text">
+        <span class="ach-label">Achievement Unlocked</span>
+        <span class="ach-name" id="achievement-name">The Philosopher</span>
+      </span>
+    </div>
+
+    <div class="victory-rewards">
+      <div class="reward-stat"><div class="rv" id="victory-xp">+0</div><div class="rl">XP Gained</div></div>
+      <div class="reward-stat"><div class="rv" id="victory-coins">+0</div><div class="rl">Coins Earned</div></div>
+    </div>
+
+    <p class="next-opponent-line">Next Opponent Unlocked — <span id="victory-next-name">Sun Tzu</span></p>
+
+    <button class="btn btn-gold" id="victory-continue">Continue</button>
+  </div>
+</div>
+
+<!-- ============================= FULL-SCREEN DEFEAT ============================= -->
+<div class="defeat-overlay" id="defeat-overlay" role="dialog" aria-modal="true" aria-labelledby="defeat-heading">
+  <div class="defeat-vignette" aria-hidden="true"></div>
+  <svg class="crack-svg" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden="true">
+    <path class="crack-path c1" d="M400 0 L370 140 L430 210 L360 300 L410 380 L340 500 L380 600"/>
+    <path class="crack-path c2" d="M400 0 L470 120 L420 190 L500 260 L440 350"/>
+    <path class="crack-path c3" d="M0 300 L150 280 L200 320 L340 300"/>
+    <path class="crack-path c4" d="M800 320 L650 300 L600 340 L460 320"/>
+  </svg>
+
+  <div class="defeat-content">
+    <p class="defeat-laugh" id="defeat-laugh">"...predictable, as always."</p>
+    <h2 class="defeat-title" id="defeat-heading">You Have Been Defeated</h2>
+
+    <div class="lives-row">
+      <span class="hud-label">Lives Remaining</span>
+      <span class="lives-hearts" id="lives-hearts" aria-label="2 lives remaining"></span>
+    </div>
+
+    <div class="defeat-actions">
+      <button class="btn btn-primary" id="defeat-retry">Retry</button>
+      <button class="btn btn-ghost" id="defeat-hint">Hint</button>
+      <button class="btn btn-ghost" id="defeat-exit">Exit</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================================
+     OPPONENT DATA — six thinkers from the Arena roster. Switching opponents
+     resets the local debate state (resolve, mood, chat) for a fresh demo.
+     ========================================================================= */
+  var OPPONENTS = [
+    {
+      id:'socrates', name:'Socrates', role:'The Philosopher', accent:'#4fd8ff', difficulty:3,
+      ability:{name:'Socratic Trap', desc:'Force a contradiction in their last claim for bonus damage to their resolve.'},
+      hint:'Question his premise before he questions yours — Socrates wins by making you define your terms.',
+      laugh:'"...and yet you still haven\'t defined your terms."',
+      lines:[
+        "And how would you define \"truth,\" before you claim to speak it?",
+        "You assume your conclusion is the beginning — walk me back further.",
+        "If that were true, would it not also excuse the very thing you condemn?",
+        "I only ask because you seemed so certain a moment ago.",
+        "Strip away the metaphor — what is the argument underneath it?"
+      ]
+    },
+    {
+      id:'suntzu', name:'Sun Tzu', role:'The Strategist', accent:'#ff785a', difficulty:4,
+      ability:{name:'Flanking Logic', desc:'Redirect their strongest point into a weakness they never saw coming.'},
+      hint:'Do not meet his strongest claim head-on — attack the assumption it depends on.',
+      laugh:'"I told you — won before it began."',
+      lines:[
+        "You attacked where I was strongest. That was your first mistake.",
+        "A wise debater wins before the argument even begins.",
+        "You have shown me your position. Now I know exactly where it breaks.",
+        "Retreat is also a strategy — are you certain you should press further?",
+        "I anticipated this claim three exchanges ago."
+      ]
+    },
+    {
+      id:'machiavelli', name:'Machiavelli', role:'The Realist', accent:'#a855f7', difficulty:3,
+      ability:{name:'Feigned Concession', desc:'Pretend to agree, then use their own point against them next turn.'},
+      hint:'He rewards ideals with traps. Ground every claim in something provably practical.',
+      laugh:'"Idealism, again. How predictable."',
+      lines:[
+        "A charming principle. Now tell me who benefits when it fails.",
+        "I will grant you that point — it will cost you more later.",
+        "Idealism is a luxury. Let's discuss what actually happens.",
+        "You argue as the world should be. I argue as it is.",
+        "Interesting — and what would you sacrifice to prove that true?"
+      ]
+    },
+    {
+      id:'einstein', name:'Einstein', role:'The Genius', accent:'#4fd8ff', difficulty:4,
+      ability:{name:'Thought Experiment', desc:'Reframe the debate entirely, forcing them to argue on your terms.'},
+      hint:'He tests consistency across scales. If your logic breaks at the extreme, he will find it.',
+      laugh:'"It only worked close up. I told you it would break."',
+      lines:[
+        "Imagine your claim taken to its limit — does it still hold?",
+        "An elegant idea. Now show me the frame it depends on.",
+        "You've described an effect. I am still waiting for the cause.",
+        "Two claims cannot both be true if they contradict at the edges.",
+        "Curious — your logic works close up, but what happens far away?"
+      ]
+    },
+    {
+      id:'cleopatra', name:'Cleopatra', role:'The Sovereign', accent:'#d9b46a', difficulty:3,
+      ability:{name:"Royal Decree", desc:'Command the tempo of the debate, forcing a rushed and weaker reply.'},
+      hint:'She rewards composure. Slow down — a hurried answer is exactly what she wants.',
+      laugh:'"Empires outlasted better arguments than yours."',
+      lines:[
+        "You speak quickly. Haste is rarely mistaken for conviction.",
+        "I have negotiated with emperors. Your argument will need more than confidence.",
+        "A bold claim — but boldness alone never held a throne.",
+        "Choose your next words as if a kingdom depended on them.",
+        "I've outlasted better arguments than this one."
+      ]
+    },
+    {
+      id:'tesla', name:'Nikola Tesla', role:'The Inventor', accent:'#4fd8ff', difficulty:4,
+      ability:{name:'Overload', desc:'Chain two rapid rebuttals together before they can fully respond.'},
+      hint:'He moves fast between ideas. Anchor him — ask him to finish one thought before starting another.',
+      laugh:'"...three steps ahead, as promised."',
+      lines:[
+        "You've built an argument on one idea. I have three running in parallel.",
+        "The present moment agrees with you. The future will not.",
+        "An interesting spark — but sparks alone do not power an argument.",
+        "You're reacting to what I said. I'm already three steps ahead.",
+        "Everyone doubts the current until it's already reached them."
+      ]
+    }
+  ];
+
+  var state = {
+    opponentIndex:0,
+    hp:100,
+    mood:'Composed',
+    abilityCooldown:0,
+    abilityMaxCooldown:18,
+    timerSeconds: 9*60+42,
+    level:7, xp:1240, xpMax:2000, coins:312, escape:34,
+    clarity:82,
+    lives:3, livesMax:3,
+    lineCursor:0,
+    busy:false
+  };
+
+  var els = {
+    switcher: document.getElementById('opp-switcher'),
+    opName: document.getElementById('opp-name'),
+    opRole: document.getElementById('opp-role'),
+    opDiff: document.getElementById('opp-diff'),
+    hpFill: document.getElementById('hp-fill'),
+    hpText: document.getElementById('hp-text'),
+    moodWord: document.getElementById('mood-word'),
+    abilityBtn: document.getElementById('ability-btn'),
+    abilityCdText: document.getElementById('ability-cd-text'),
+    abilityName: document.getElementById('ability-name'),
+    abilityDesc: document.getElementById('ability-desc'),
+    hintText: document.getElementById('hint-text'),
+    chatScroll: document.getElementById('chat-scroll'),
+    chatInput: document.getElementById('chat-input'),
+    sendBtn: document.getElementById('send-btn'),
+    micBtn: document.getElementById('mic-btn'),
+    hintBtn: document.getElementById('hint-btn'),
+    hintPop: document.getElementById('hint-pop'),
+    invBtn: document.getElementById('inv-btn'),
+    invPop: document.getElementById('inv-pop'),
+    clarityFill: document.getElementById('clarity-fill'),
+    xpFill: document.getElementById('xp-fill'),
+    xpText: document.getElementById('xp-text'),
+    escapeFill: document.getElementById('escape-fill'),
+    escapeText: document.getElementById('escape-text'),
+    coins: document.getElementById('stat-coins'),
+    level: document.getElementById('stat-level'),
+    timerText: document.getElementById('timer-text'),
+    timerWrap: document.getElementById('hud-timer'),
+    bustSvg: document.getElementById('bust-svg'),
+    shell: document.querySelector('.shell'),
+
+    scoringOverlay: document.getElementById('scoring-overlay'),
+    scoringCard: document.getElementById('scoring-card'),
+    overallRing: document.getElementById('overall-ring'),
+    overallNum: document.getElementById('overall-num'),
+    overallTag: document.getElementById('overall-tag'),
+
+    victoryOverlay: document.getElementById('victory-overlay'),
+    achievementName: document.getElementById('achievement-name'),
+    victoryXp: document.getElementById('victory-xp'),
+    victoryCoins: document.getElementById('victory-coins'),
+    victoryNextName: document.getElementById('victory-next-name'),
+    victoryContinue: document.getElementById('victory-continue'),
+    confettiField: document.getElementById('confetti-field'),
+
+    defeatOverlay: document.getElementById('defeat-overlay'),
+    defeatLaugh: document.getElementById('defeat-laugh'),
+    livesHearts: document.getElementById('lives-hearts'),
+    defeatRetry: document.getElementById('defeat-retry'),
+    defeatHint: document.getElementById('defeat-hint'),
+    defeatExit: document.getElementById('defeat-exit')
+  };
+
+  /* =========================================================================
+     OPPONENT SWITCHER — builds the chip strip and handles selection
+     ========================================================================= */
+  function buildSwitcher(){
+    els.switcher.innerHTML = '';
+    OPPONENTS.forEach(function(op, i){
+      var btn = document.createElement('button');
+      btn.className = 'opp-chip' + (i === state.opponentIndex ? ' active' : '');
+      btn.setAttribute('role','tab');
+      btn.setAttribute('aria-selected', i === state.opponentIndex ? 'true':'false');
+      btn.setAttribute('aria-label', op.name);
+      btn.style.setProperty('--accent', op.accent);
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="'+op.accent+'" stroke-width="2"><circle cx="12" cy="9" r="4"/><path d="M4 20c1.5-5 5-7 8-7s6.5 2 8 7"/></svg>';
+      btn.addEventListener('click', function(){ selectOpponent(i); });
+      els.switcher.appendChild(btn);
+    });
+  }
+
+  function selectOpponent(i){
+    state.opponentIndex = i;
+    state.hp = 100;
+    state.clarity = 82;
+    state.mood = 'Composed';
+    state.lineCursor = 0;
+    state.busy = false;
+    setControlsDisabled(false);
+    var op = OPPONENTS[i];
+    document.documentElement.style.setProperty('--accent', op.accent);
+    document.documentElement.style.setProperty('--accent-soft', hexToRgba(op.accent, .35));
+    els.opName.textContent = op.name;
+    els.opRole.textContent = op.role;
+    els.abilityName.textContent = op.ability.name;
+    els.abilityDesc.textContent = op.ability.desc;
+    els.abilityBtn.setAttribute('aria-label', 'Use special ability: '+op.ability.name);
+    els.hintText.textContent = op.hint;
+    els.clarityFill.style.width = state.clarity + '%';
+    renderDifficulty(op.difficulty);
+    renderHP();
+    renderMood();
+    Array.prototype.forEach.call(els.switcher.children, function(chip, idx){
+      chip.classList.toggle('active', idx === i);
+      chip.setAttribute('aria-selected', idx === i ? 'true':'false');
+    });
+    els.chatScroll.innerHTML = '';
+    appendMessage('ai', op.name, greetingFor(op));
+  }
+
+  function greetingFor(op){
+    return 'The chamber seals behind you. ' + op.name + ' turns to face you. "Speak your first argument, and let us begin."';
+  }
+
+  function hexToRgba(hex, alpha){
+    var c = hex.replace('#','');
+    var r = parseInt(c.substring(0,2),16), g = parseInt(c.substring(2,4),16), b = parseInt(c.substring(4,6),16);
+    return 'rgba('+r+','+g+','+b+','+alpha+')';
+  }
+
+  function renderDifficulty(level){
+    els.opDiff.innerHTML = '';
+    els.opDiff.setAttribute('aria-label','Difficulty '+level+' out of 5');
+    for(var i=1;i<=5;i++){
+      var star = document.createElement('i');
+      if(i <= level) star.classList.add('filled');
+      els.opDiff.appendChild(star);
+    }
+  }
+
+  /* =========================================================================
+     RESOLVE (HP) / MOOD RENDERING
+     ========================================================================= */
+  function renderHP(){
+    els.hpFill.style.width = state.hp + '%';
+    els.hpText.textContent = Math.max(0, Math.round(state.hp)) + '%';
+    els.hpFill.classList.remove('mid','low');
+    if(state.hp <= 30) els.hpFill.classList.add('low');
+    else if(state.hp <= 65) els.hpFill.classList.add('mid');
+  }
+
+  function renderMood(){
+    els.moodWord.textContent = state.mood;
+  }
+
+  function updateMoodFromHP(){
+    if(state.hp > 75) state.mood = 'Composed';
+    else if(state.hp > 45) state.mood = 'Guarded';
+    else if(state.hp > 20) state.mood = 'Irritated';
+    else if(state.hp > 0) state.mood = 'Cornered';
+    else state.mood = 'Defeated';
+    renderMood();
+  }
+
+  function renderLives(){
+    els.livesHearts.innerHTML = '';
+    els.livesHearts.setAttribute('aria-label', state.lives + ' lives remaining');
+    for(var i=0;i<state.livesMax;i++){
+      var filled = i < state.lives;
+      var svg = '<svg viewBox="0 0 24 24" class="'+(filled?'filled':'lost')+'" aria-hidden="true"><path d="M12 21s-7-4.35-10-9.28C.5 8.5 2 5 5.5 5c2 0 3.5 1.2 4.5 2.7C11 6.2 12.5 5 14.5 5 18 5 19.5 8.5 18 11.72 15 16.65 12 21 12 21z"/></svg>';
+      els.livesHearts.insertAdjacentHTML('beforeend', svg);
+    }
+  }
+
+  /* =========================================================================
+     CHAT
+     ========================================================================= */
+  function appendMessage(who, label, text, streaming){
+    var wrap = document.createElement('div');
+    wrap.className = 'msg ' + (who === 'ai' ? 'ai' : 'player');
+
+    var meta = document.createElement('div');
+    meta.className = 'msg-meta';
+    meta.textContent = label;
+
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    wrap.appendChild(meta);
+    wrap.appendChild(bubble);
+    els.chatScroll.appendChild(wrap);
+    scrollChatToBottom();
+
+    if(streaming){
+      streamText(bubble, text);
+    } else {
+      bubble.textContent = text;
+    }
+    return bubble;
+  }
+
+  function streamText(bubble, text){
+    var caret = document.createElement('span');
+    caret.className = 'caret';
+    var i = 0;
+    function tick(){
+      bubble.textContent = text.slice(0, i);
+      bubble.appendChild(caret);
+      scrollChatToBottom();
+      i++;
+      if(i <= text.length){
+        setTimeout(tick, 16 + Math.random()*22);
+      } else {
+        caret.remove();
+        state.busy = false;
+        setControlsDisabled(false);
+        els.chatInput.focus();
+      }
+    }
+    tick();
+  }
+
+  /* =========================================================================
+     AI "THINKING" SEQUENCE — replaces plain dots with cycling status lines
+     ========================================================================= */
+  var AI_THINKING_LINES = [
+    'Analyzing Argument...',
+    'Searching Historical Knowledge...',
+    'Constructing Counterargument...',
+    'Evaluating Logic...',
+    'Generating Response...'
+  ];
+
+  function showThinking(onDone){
+    var row = document.createElement('div');
+    row.className = 'msg ai';
+    row.id = 'typing-row';
+    row.innerHTML =
+      '<div class="msg-meta">' + OPPONENTS[state.opponentIndex].name + '</div>' +
+      '<div class="thinking-card"><span class="thinking-spinner" aria-hidden="true"></span>' +
+      '<span class="thinking-text" id="thinking-text"></span></div>';
+    els.chatScroll.appendChild(row);
+    scrollChatToBottom();
+
+    var i = 0;
+    function next(){
+      var span = document.getElementById('thinking-text');
+      if(!span){ if(onDone) onDone(); return; }
+      if(i >= AI_THINKING_LINES.length){ if(onDone) onDone(); return; }
+      var p = document.createElement('span');
+      p.className = 'tphrase';
+      p.textContent = AI_THINKING_LINES[i];
+      span.innerHTML = '';
+      span.appendChild(p);
+      scrollChatToBottom();
+      i++;
+      setTimeout(next, 380);
+    }
+    next();
+  }
+  function hideThinking(){
+    var row = document.getElementById('typing-row');
+    if(row) row.remove();
+  }
+
+  function scrollChatToBottom(){
+    els.chatScroll.scrollTop = els.chatScroll.scrollHeight;
+  }
+
+  function setControlsDisabled(disabled){
+    els.sendBtn.disabled = disabled;
+    els.chatInput.disabled = disabled;
+  }
+
+  /* =========================================================================
+     DEBATE SCORING ANIMATION — Logic / Evidence / Creativity / Persuasion /
+     Confidence, each an animated bar, feeding into an Overall Score ring.
+     Score > 70 counts as a landed argument (more damage); otherwise it
+     falters (little/no damage, and it costs the player some Clarity).
+     ========================================================================= */
+  function scoreArgument(text){
+    var len = text.trim().length;
+    var base = 42 + Math.min(34, len * 0.35);
+    function metric(){ return Math.max(12, Math.min(98, Math.round(base + (Math.random()*32 - 16)))); }
+    var scores = {
+      Logic: metric(), Evidence: metric(), Creativity: metric(),
+      Persuasion: metric(), Confidence: metric()
+    };
+    var overall = Math.round((scores.Logic + scores.Evidence + scores.Creativity + scores.Persuasion + scores.Confidence) / 5);
+    return { scores: scores, overall: overall };
+  }
+
+  function resetScoringUI(){
+    var rows = els.scoringCard.querySelectorAll('.score-row');
+    rows.forEach(function(r){
+      var fill = r.querySelector('[data-fill]');
+      var val = r.querySelector('[data-val]');
+      fill.style.width = '0%';
+      fill.classList.remove('mid','low');
+      val.textContent = '0';
+    });
+    els.overallRing.style.setProperty('--pct', 0);
+    els.overallNum.textContent = '0';
+    els.overallTag.classList.remove('show','win','lose');
+  }
+
+  function animateScoreRow(rowEl, value){
+    if(!rowEl) return;
+    var fill = rowEl.querySelector('[data-fill]');
+    var val = rowEl.querySelector('[data-val]');
+    fill.classList.remove('mid','low');
+    if(value < 50) fill.classList.add('low');
+    else if(value < 75) fill.classList.add('mid');
+    fill.style.width = value + '%';
+    var start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/500, 1);
+      val.textContent = Math.round(value * p);
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function animateOverall(value, done){
+    els.overallRing.style.setProperty('--score-color', value > 70 ? 'var(--ok)' : 'var(--danger)');
+    var start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/700, 1);
+      var cur = Math.round(value * p);
+      els.overallNum.textContent = cur;
+      els.overallRing.style.setProperty('--pct', cur);
+      if(p < 1) requestAnimationFrame(step);
+      else if(done) done();
+    }
+    requestAnimationFrame(step);
+  }
+
+  function runScoring(text, callback){
+    var result = scoreArgument(text);
+    resetScoringUI();
+    els.scoringOverlay.classList.add('show');
+
+    var order = ['Logic','Evidence','Creativity','Persuasion','Confidence'];
+    var startDelay = 300;
+    var stagger = 220;
+    order.forEach(function(m, idx){
+      var rowEl = els.scoringCard.querySelector('.score-row[data-metric="'+m+'"]');
+      setTimeout(function(){ animateScoreRow(rowEl, result.scores[m]); }, startDelay + idx*stagger);
+    });
+
+    var lastEnd = startDelay + (order.length-1)*stagger + 560;
+    setTimeout(function(){
+      animateOverall(result.overall, function(){
+        var win = result.overall > 70;
+        els.overallTag.textContent = win ? 'Argument Lands' : 'Argument Falters';
+        els.overallTag.classList.add('show', win ? 'win' : 'lose');
+        if(!win){
+          els.scoringCard.classList.add('shake');
+          setTimeout(function(){ els.scoringCard.classList.remove('shake'); }, 420);
+        }
+        setTimeout(function(){
+          els.scoringOverlay.classList.remove('show');
+          if(callback) callback(result.overall, win);
+        }, 950);
+      });
+    }, lastEnd);
+  }
+
+  /* =========================================================================
+     SEND / RESPONSE FLOW
+     ========================================================================= */
+  function sendMessage(){
+    var text = els.chatInput.value.trim();
+    if(!text || state.busy || state.hp <= 0) return;
+    var playerBubble = appendMessage('player', 'You', text, false);
+    els.chatInput.value = '';
+
+    state.busy = true;
+    setControlsDisabled(true);
+
+    runScoring(text, function(overall, win){
+      playerBubble.classList.add(win ? 'flash-win' : 'flash-lose');
+
+      if(win){
+        bumpXP(45);
+      } else {
+        bumpXP(10);
+        state.clarity = Math.max(0, state.clarity - (8 + Math.random()*10));
+        els.clarityFill.style.width = state.clarity + '%';
+      }
+
+      showThinking(function(){
+        hideThinking();
+        var op = OPPONENTS[state.opponentIndex];
+        var line = op.lines[state.lineCursor % op.lines.length];
+        state.lineCursor++;
+        appendMessage('ai', op.name, line, true);
+
+        var dmg = win ? (14 + (overall-70)*0.4) : Math.max(0, (overall-40)*0.2);
+        applyDamage(dmg);
+
+        if(!win && state.clarity <= 0 && state.hp > 0){
+          setTimeout(triggerDefeat, 700);
+        }
+      });
+    });
+  }
+
+  function applyDamage(amount){
+    state.hp = Math.max(0, state.hp - amount);
+    renderHP();
+    updateMoodFromHP();
+    bumpEscape(amount * 0.35);
+    if(state.hp <= 0){
+      setTimeout(runVictorySequence, 700);
+    }
+  }
+
+  function bumpXP(amount){
+    state.xp = Math.min(state.xpMax, state.xp + amount);
+    els.xpFill.style.width = (state.xp/state.xpMax*100) + '%';
+    els.xpText.textContent = state.xp.toLocaleString() + ' / ' + state.xpMax.toLocaleString();
+    state.coins += Math.round(amount/5);
+    els.coins.textContent = state.coins.toLocaleString();
+  }
+
+  function bumpEscape(amount){
+    state.escape = Math.min(100, state.escape + amount);
+    els.escapeFill.style.width = state.escape + '%';
+    els.escapeText.textContent = Math.round(state.escape) + '%';
+  }
+
+  function animateCounterTo(el, target, prefix){
+    var start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/1000, 1);
+      el.textContent = (prefix||'') + Math.round(target*p);
+      if(p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* =========================================================================
+     FULL-SCREEN VICTORY — shake, golden light, confetti, portal, rewards
+     ========================================================================= */
+  function spawnConfetti(){
+    els.confettiField.innerHTML = '';
+    var colors = ['#ffd88a','#4fd8ff','#a855f7','#fff7e0','#d9b46a'];
+    for(var i=0;i<44;i++){
+      var bit = document.createElement('span');
+      bit.className = 'confetti-bit';
+      bit.style.left = (Math.random()*100) + '%';
+      bit.style.background = colors[Math.floor(Math.random()*colors.length)];
+      var dur = 2.2 + Math.random()*1.8;
+      bit.style.animationDuration = dur + 's';
+      bit.style.animationDelay = (Math.random()*0.7) + 's';
+      bit.style.transform = 'rotate(' + Math.floor(Math.random()*360) + 'deg)';
+      els.confettiField.appendChild(bit);
+    }
+  }
+
+  function runVictorySequence(){
+    state.busy = true;
+    setControlsDisabled(true);
+    els.shell.classList.add('shake');
+    setTimeout(function(){
+      els.shell.classList.remove('shake');
+      var op = OPPONENTS[state.opponentIndex];
+      var nextOp = OPPONENTS[(state.opponentIndex+1) % OPPONENTS.length];
+      var xpGain = 220 + Math.round(Math.random()*80);
+      var coinGain = 60 + Math.round(Math.random()*40);
+
+      els.achievementName.textContent = op.role;
+      els.victoryNextName.textContent = nextOp.name;
+      els.victoryXp.textContent = '+0';
+      els.victoryCoins.textContent = '+0';
+
+      spawnConfetti();
+      els.victoryOverlay.classList.add('show');
+      bumpXP(xpGain);
+      setTimeout(function(){
+        animateCounterTo(els.victoryXp, xpGain, '+');
+        animateCounterTo(els.victoryCoins, coinGain, '+');
+      }, 700);
+    }, 650);
+  }
+
+  els.victoryContinue.addEventListener('click', function(){
+    els.victoryOverlay.classList.remove('show');
+    els.confettiField.innerHTML = '';
+    selectOpponent((state.opponentIndex + 1) % OPPONENTS.length);
+  });
+
+  /* =========================================================================
+     FULL-SCREEN DEFEAT — dark, cracked arena, taunting AI, lives, actions
+     ========================================================================= */
+  function triggerDefeat(){
+    state.lives = Math.max(0, state.lives - 1);
+    renderLives();
+    var op = OPPONENTS[state.opponentIndex];
+    els.defeatLaugh.textContent = op.laugh;
+    els.defeatRetry.style.display = state.lives <= 0 ? 'none' : 'inline-flex';
+    state.busy = true;
+    setControlsDisabled(true);
+    els.defeatOverlay.classList.add('show');
+  }
+
+  function resetCurrentChamber(){
+    state.hp = 100;
+    state.clarity = 60;
+    state.busy = false;
+    setControlsDisabled(false);
+    renderHP();
+    updateMoodFromHP();
+    els.clarityFill.style.width = state.clarity + '%';
+  }
+
+  els.defeatRetry.addEventListener('click', function(){
+    els.defeatOverlay.classList.remove('show');
+    resetCurrentChamber();
+  });
+  els.defeatHint.addEventListener('click', function(){
+    els.defeatOverlay.classList.remove('show');
+    resetCurrentChamber();
+    setTimeout(function(){ togglePop(els.hintPop, els.hintBtn, els.invPop, els.invBtn); }, 450);
+  });
+  els.defeatExit.addEventListener('click', function(){
+    window.location.href = 'index.html';
+  });
+
+  /* =========================================================================
+     SPECIAL ABILITY (cooldown ring driven by rAF)
+     ========================================================================= */
+  function useAbility(){
+    if(state.abilityCooldown > 0 || state.busy || state.hp <= 0) return;
+    applyDamage(16 + Math.random()*8);
+    var op = OPPONENTS[state.opponentIndex];
+    appendMessage('player', 'You', '[Special] ' + op.ability.name + ' — you expose the flaw in their reasoning.', false);
+    bumpXP(20);
+    state.abilityCooldown = state.abilityMaxCooldown;
+    els.abilityBtn.disabled = true;
+    tickCooldown();
+  }
+  function tickCooldown(){
+    if(state.abilityCooldown <= 0){
+      els.abilityBtn.disabled = false;
+      els.abilityBtn.style.setProperty('--cd', 0);
+      return;
+    }
+    var pct = 100 - (state.abilityCooldown/state.abilityMaxCooldown*100);
+    els.abilityBtn.style.setProperty('--cd', pct);
+    els.abilityCdText.textContent = Math.ceil(state.abilityCooldown) + 's';
+    state.abilityCooldown -= 0.25;
+    setTimeout(tickCooldown, 250);
+  }
+
+  /* =========================================================================
+     HINT / INVENTORY POPOVERS
+     ========================================================================= */
+  function togglePop(pop, btn, otherPop, otherBtn){
+    var open = pop.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true':'false');
+    if(open){
+      otherPop.classList.remove('open');
+      otherBtn.setAttribute('aria-expanded','false');
+    }
+  }
+  els.hintBtn.addEventListener('click', function(){ togglePop(els.hintPop, els.hintBtn, els.invPop, els.invBtn); });
+  els.invBtn.addEventListener('click', function(){ togglePop(els.invPop, els.invBtn, els.hintPop, els.hintBtn); });
+  document.addEventListener('click', function(e){
+    if(!els.hintPop.contains(e.target) && e.target !== els.hintBtn && !els.hintBtn.contains(e.target)){
+      els.hintPop.classList.remove('open'); els.hintBtn.setAttribute('aria-expanded','false');
+    }
+    if(!els.invPop.contains(e.target) && e.target !== els.invBtn && !els.invBtn.contains(e.target)){
+      els.invPop.classList.remove('open'); els.invBtn.setAttribute('aria-expanded','false');
+    }
+  });
+
+  /* =========================================================================
+     MIC (decorative voice-input simulation)
+     ========================================================================= */
+  var demoPhrases = [
+    "If your logic held, it would apply even when it's inconvenient for you.",
+    "You're defending the conclusion, not the reasoning that leads to it.",
+    "That's an assumption dressed up as evidence.",
+    "I'll grant the premise — but the conclusion doesn't follow from it."
+  ];
+  els.micBtn.addEventListener('click', function(){
+    if(state.busy) return;
+    var listening = els.micBtn.classList.toggle('active');
+    els.micBtn.setAttribute('aria-pressed', listening ? 'true':'false');
+    if(listening){
+      els.chatInput.placeholder = 'Listening…';
+      setTimeout(function(){
+        if(!els.micBtn.classList.contains('active')) return;
+        els.chatInput.value = demoPhrases[Math.floor(Math.random()*demoPhrases.length)];
+        els.micBtn.classList.remove('active');
+        els.micBtn.setAttribute('aria-pressed','false');
+        els.chatInput.placeholder = 'Present your argument…';
+        els.chatInput.focus();
+      }, 1500);
+    } else {
+      els.chatInput.placeholder = 'Present your argument…';
+    }
+  });
+
+  /* =========================================================================
+     TIMER
+     ========================================================================= */
+  function tickTimer(){
+    if(state.timerSeconds > 0){ state.timerSeconds--; }
+    var m = Math.floor(state.timerSeconds/60);
+    var s = state.timerSeconds%60;
+    els.timerText.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    els.timerWrap.classList.toggle('low', state.timerSeconds <= 60);
+  }
+  setInterval(tickTimer, 1000);
+
+  /* =========================================================================
+     EVENTS
+     ========================================================================= */
+  els.sendBtn.addEventListener('click', sendMessage);
+  els.chatInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ sendMessage(); }
+  });
+  els.abilityBtn.addEventListener('click', useAbility);
+
+  /* =========================================================================
+     INIT
+     ========================================================================= */
+  buildSwitcher();
+  renderLives();
+  selectOpponent(0);
+  els.xpFill.style.width = (state.xp/state.xpMax*100)+'%';
+  els.xpText.textContent = state.xp.toLocaleString()+' / '+state.xpMax.toLocaleString();
+  els.escapeFill.style.width = state.escape+'%';
+  els.escapeText.textContent = state.escape+'%';
+
+})();
+</script>
+</body>
+</html>
