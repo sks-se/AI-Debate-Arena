@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arena of Minds — You Are Trapped. Only Logic Can Set You Free.</title>
+<meta name="description" content="Wake inside an ancient machine. Defeat history's greatest minds in debate, or become part of the Arena forever.">
+
+<!-- ============================= FONTS ============================= -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Connect CSS-->
+<link rel="stylesheet" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\css\index.css">
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ============================= LOADER ============================= -->
+<div id="loader">
+  <span class="sr-only" role="status">Loading, please wait. Entering Arena of Minds.</span>
+  <div class="loader-scanline" aria-hidden="true"></div>
+  <div class="boot-sequence" aria-hidden="true">
+    <p class="boot-line line-1">System Online<span>...</span></p>
+    <p class="boot-line line-2">Arena Initializing<span>...</span></p>
+    <p class="boot-line line-3">Searching for worthy challenger<span>...</span></p>
+    <p class="boot-line line-4">Player Found</p>
+    <p class="boot-line line-5">Loading Consciousness<span>...</span><span class="load-bar"><span class="load-bar-fill"></span></span></p>
+    <p class="boot-line line-6">Welcome to the <span class="glow-text">Arena of Minds</span></p>
+  </div>
+</div>
+
+<div id="scroll-progress"></div>
+<div id="cursor-glow" aria-hidden="true"></div>
+
+<!-- ============================= FIXED BACKGROUND ============================= -->
+<div id="bg-fixed" aria-hidden="true">
+  <div id="stars"></div>
+</div>
+
+<!-- ============================= HEADER / NAV ============================= -->
+<header id="site-header">
+  <div class="container nav-inner">
+    <a href="#top" class="brand" aria-label="Arena of Minds — home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="17" stroke="url(#g1)" stroke-width="1.4"/>
+          <path d="M20 5 L20 35 M5 20 L35 20" stroke="url(#g1)" stroke-width="1" opacity=".5"/>
+          <circle cx="20" cy="20" r="6" fill="url(#g1)" opacity=".85"/>
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="40" y2="40">
+              <stop offset="0" stop-color="#4fd8ff"/>
+              <stop offset="1" stop-color="#a855f7"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </span>
+      <span>ARENA <small>OF MINDS</small></span>
+    </a>
+
+    <nav class="nav-links" id="nav-links" aria-label="Primary">
+      <a href="#home" class="active">Home</a>
+      <a href="#story">Story</a>
+      <a href="#opponents">Opponents</a>
+      <a href="#features">Features</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\dashboard.html">Dashboard</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\leaderboard.html">Leaderboard</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\achievements.html">Achievements</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\settings.html">Settings</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\debateroom.html" class="btn btn-primary btn-small nav-cta mobile" data-ripple>Enter Arena</a>
+    </nav>
+
+    <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\debateroom.html" class="btn btn-primary btn-small nav-cta" data-ripple>Enter Arena</a>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============================= HERO ============================= -->
+<section class="hero" id="home" aria-label="Introduction">
+  <div class="smoke" aria-hidden="true"></div>
+  <div class="hero-bg" aria-hidden="true">
+    <svg class="hero-gate" viewBox="0 0 600 600" fill="none" role="presentation">
+      <defs>
+        <radialGradient id="gateGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#eafcff" stop-opacity="1"/>
+          <stop offset="35%" stop-color="#4fd8ff" stop-opacity=".7"/>
+          <stop offset="70%" stop-color="#a855f7" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#a855f7" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4fd8ff"/>
+          <stop offset="1" stop-color="#a855f7"/>
+        </linearGradient>
+      </defs>
+      <circle cx="300" cy="300" r="120" fill="url(#gateGlow)"/>
+      <g id="ring-outer" style="transform-origin:300px 300px;">
+        <circle cx="300" cy="300" r="260" stroke="url(#ringGrad)" stroke-width="1" opacity=".35" stroke-dasharray="4 10"/>
+      </g>
+      <g id="ring-mid" style="transform-origin:300px 300px;">
+        <circle cx="300" cy="300" r="210" stroke="url(#ringGrad)" stroke-width="1.2" opacity=".5" stroke-dasharray="1 6"/>
+      </g>
+      <g id="ring-inner" style="transform-origin:300px 300px;">
+        <circle cx="300" cy="300" r="165" stroke="var(--blue-neon)" stroke-width="1.5" opacity=".7"/>
+        <circle cx="300" cy="135" r="3" fill="#eafcff"/>
+        <circle cx="300" cy="465" r="3" fill="#eafcff"/>
+        <circle cx="135" cy="300" r="3" fill="#eafcff"/>
+        <circle cx="465" cy="300" r="3" fill="#eafcff"/>
+      </g>
+    </svg>
+
+    <span class="rune" style="top:14%;left:6%;animation-delay:0s;">卍</span>
+    <span class="rune" style="top:70%;left:10%;animation-delay:2s;font-size:1.8rem;">◈</span>
+    <span class="rune" style="top:30%;left:80%;animation-delay:4s;">∴</span>
+    <span class="rune" style="top:80%;left:60%;animation-delay:1s;font-size:1.1rem;">Ω</span>
+  </div>
+
+  <div class="container">
+    <div class="hero-content reveal in">
+      <p class="eyebrow">A Game of Debate &amp; Deception</p>
+      <h1>ARENA<span class="line2">OF MINDS</span></h1>
+      <p class="hero-sub">You are trapped. <strong>Only logic can set you free.</strong> Six legendary minds stand between you and the surface — <span id="typed-line"></span></p>
+
+      <div class="hero-actions">
+        <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\debateroom.html" class="btn btn-primary btn-large" data-ripple>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3v7h7l-9 11v-7H5l9-11z"/></svg>
+          Enter Arena
+        </a>
+      </div>
+
+      <div class="hero-stats" aria-label="Game statistics">
+        <div class="stat"><b data-count="6">0</b><span>Legendary Minds</span></div>
+        <div class="stat"><b data-count="6">0</b><span>Debate Chambers</span></div>
+        <div class="stat"><b data-count="3" data-suffix=" Strikes">0</b><span>Before You Lose Your Mind</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true"><span>Descend</span><span class="rail"></span></div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- ============================= STORY ============================= -->
+<section id="story" class="story-section" aria-labelledby="story-heading">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Chapter One</p>
+      <h2 id="story-heading">The Awakening</h2>
+    </div>
+
+    <div class="story-grid reveal">
+      <div class="story-panel">
+        <span class="story-corner tl" aria-hidden="true"></span>
+        <span class="story-corner br" aria-hidden="true"></span>
+
+        <p class="story-lede">You wake on cold stone. No memory of how you arrived. Above you, ancient columns rise into a sky that flickers like a broken signal — half temple, half machine.</p>
+
+        <p class="story-voice">A voice fills the chamber, calm and vast: <em>"You have been chosen. The greatest minds in history have been recreated inside this Arena."</em></p>
+
+        <div class="story-body">
+          <p>Each chamber holds one legendary thinker, pulled from history and rebuilt in light and logic. To move forward, you must face them — not with weapons, but with <strong>argument</strong>. Wit against wit. Reason against reason.</p>
+          <p>Win, and the Arena opens a path deeper toward the surface. Lose, and a fragment of who you are is taken and folded into the walls, added to the thousands who came before you.</p>
+          <p>Every argument is scored the moment you speak it. <strong>Score higher than your opponent, and the chamber unlocks</strong> — the path forward opens, and the next mind awaits.</p>
+        </div>
+
+        <p class="story-warning">⚠ LOSE THREE DEBATES, AND YOUR MEMORY BECOMES PART OF THE ARENA. FOREVER.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- ============================= OPPONENTS ============================= -->
+<section id="opponents" aria-labelledby="opponents-heading">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Chapter Two</p>
+      <h2 id="opponents-heading">Meet Your Opponents</h2>
+      <p>Six chambers. Six minds. Each one rebuilt from the sharpest ideas they ever spoke.</p>
+    </div>
+
+    <div class="opponents-carousel-wrap reveal">
+      <button class="carousel-btn prev" id="carousel-prev" aria-label="Scroll opponents left">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <div class="opponents-track" id="opponents-track" tabindex="0" role="list" aria-label="Opponent roster">
+        <!-- Card 1: Adi Shankaracharya -->
+        <article class="opp-card" role="listitem" style="--pc1:rgba(79,216,255,.35)">
+          <div class="opp-portrait" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="20" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M20 92c2-24 12-36 30-36s28 12 30 36" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M32 46c6 6 30 6 36 0" stroke="#4fd8ff" stroke-width="1" fill="none" opacity=".6"/></svg>
+          </div>
+          <div class="opp-quote">"The self that argues and the self that doubts are one — dissolve that, and your argument follows."</div>
+          <div class="opp-info">
+            <h3 class="opp-name">Adi Shankaracharya</h3>
+            <p class="opp-title">The Philosopher</p>
+            <div class="opp-diff">DIFFICULTY <span class="opp-stars">
+              <i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i><i></i>
+            </span></div>
+          </div>
+        </article>
+
+        <!-- Card 2: Chanakya -->
+        <article class="opp-card" role="listitem" style="--pc1:rgba(255,120,90,.3)">
+          <div class="opp-portrait" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><path d="M30 40 L50 20 L70 40 Z" fill="#ff785a" opacity=".8"/><circle cx="50" cy="52" r="16" stroke="#ff785a" stroke-width="1.6" fill="none"/><path d="M22 92c2-22 12-32 28-32s26 10 28 32" stroke="#ff785a" stroke-width="1.6" fill="none"/></svg>
+          </div>
+          <div class="opp-quote">"The debate is won before either of us speaks a word."</div>
+          <div class="opp-info">
+            <h3 class="opp-name">Chanakya</h3>
+            <p class="opp-title">The Strategist</p>
+            <div class="opp-diff">DIFFICULTY <span class="opp-stars">
+              <i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i>
+            </span></div>
+          </div>
+        </article>
+
+        <!-- Card 3: Shivaji Maharaj -->
+        <article class="opp-card" role="listitem" style="--pc1:rgba(168,85,247,.35)">
+          <div class="opp-portrait" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="19" stroke="#a855f7" stroke-width="1.6" fill="none"/><path d="M21 92c2-23 13-35 29-35s27 12 29 35" stroke="#a855f7" stroke-width="1.6" fill="none"/><path d="M31 33c8-10 30-10 38 0" stroke="#a855f7" stroke-width="1.2" opacity=".5" fill="none"/></svg>
+          </div>
+          <div class="opp-quote">"Know the terrain of the argument, and the battle is already won."</div>
+          <div class="opp-info">
+            <h3 class="opp-name">Shivaji Maharaj</h3>
+            <p class="opp-title">The Realist</p>
+            <div class="opp-diff">DIFFICULTY <span class="opp-stars">
+              <i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i><i></i>
+            </span></div>
+          </div>
+        </article>
+
+        <!-- Card 4: Ramanujan -->
+        <article class="opp-card" role="listitem" style="--pc1:rgba(79,216,255,.35)">
+          <div class="opp-portrait" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="19" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M22 92c2-23 12-35 28-35s28 12 28 35" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M30 32c-4 8-2 16 6 18M70 32c4 8 2 16-6 18" stroke="#4fd8ff" stroke-width="1" opacity=".6" fill="none"/></svg>
+          </div>
+          <div class="opp-quote">"Numbers came to me in dreams. Your argument won't survive daylight."</div>
+          <div class="opp-info">
+            <h3 class="opp-name">Srinivasa Ramanujan</h3>
+            <p class="opp-title">The Genius</p>
+            <div class="opp-diff">DIFFICULTY <span class="opp-stars">
+              <i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i>
+            </span></div>
+          </div>
+        </article>
+
+        <!-- Card 5: Razia Sultana -->
+        <article class="opp-card" role="listitem" style="--pc1:rgba(217,180,106,.35)">
+          <div class="opp-portrait" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><path d="M28 30h44v8H28z" fill="#d9b46a" opacity=".85"/><circle cx="50" cy="42" r="16" stroke="#d9b46a" stroke-width="1.6" fill="none"/><path d="M24 92c2-22 13-32 26-32s24 10 26 32" stroke="#d9b46a" stroke-width="1.6" fill="none"/></svg>
+          </div>
+          <div class="opp-quote">"I claimed a throne no one thought a woman could hold. This debate is nothing."</div>
+          <div class="opp-info">
+            <h3 class="opp-name">Razia Sultana</h3>
+            <p class="opp-title">The Sovereign</p>
+            <div class="opp-diff">DIFFICULTY <span class="opp-stars">
+              <i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i><i></i>
+            </span></div>
+          </div>
+        </article>
+
+        <!-- Card 6: APJ Abdul Kalam -->
+        <article class="opp-card" role="listitem" style="--pc1:rgba(79,216,255,.4)">
+          <div class="opp-portrait" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="38" r="18" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M23 92c2-22 12-33 27-33s25 11 27 33" stroke="#4fd8ff" stroke-width="1.6" fill="none"/><path d="M50 8 L54 22 L46 22 Z" fill="#4fd8ff" opacity=".8"/></svg>
+          </div>
+          <div class="opp-quote">"Dream big, but you will need more than dreams to defeat me here."</div>
+          <div class="opp-info">
+            <h3 class="opp-name">APJ Abdul Kalam</h3>
+            <p class="opp-title">The Inventor</p>
+            <div class="opp-diff">DIFFICULTY <span class="opp-stars">
+              <i class="filled"></i><i class="filled"></i><i class="filled"></i><i class="filled"></i><i></i>
+            </span></div>
+          </div>
+        </article>
+      </div>
+
+      <button class="carousel-btn next" id="carousel-next" aria-label="Scroll opponents right">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- ============================= FEATURES ============================= -->
+<section id="features" aria-labelledby="features-heading">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Chapter Three</p>
+      <h2 id="features-heading">Game Features</h2>
+      <p>Built for players who think fast and argue faster.</p>
+    </div>
+
+    <div class="features-grid reveal-stagger">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        <h3>AI Debates</h3>
+        <p>Real-time debates with legendary thinkers who adapt to every argument you throw.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08A3 3 0 0 1 3 13.5v-1a3 3 0 0 1 .28-1.28 2.5 2.5 0 0 1 .27-4.4A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08A3 3 0 0 0 21 13.5v-1a3 3 0 0 0-.28-1.28 2.5 2.5 0 0 0-.27-4.4A2.5 2.5 0 0 0 14.5 2z"/></svg></div>
+        <h3>Real-Time AI</h3>
+        <p>Advanced language models generate streaming responses — no two debates ever repeat.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v6M12 17v6M4.2 4.2l4.2 4.2M15.5 15.5l4.3 4.3M1 12h6M17 12h6M4.2 19.8l4.2-4.2M15.5 8.5l4.3-4.3"/></svg></div>
+        <h3>Voice Effects</h3>
+        <p>Immersive spatial voice and sound design bring every chamber to life.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h4v-6H3v6zM10 20h4V10h-4v10zM17 20h4V4h-4v16z"/></svg></div>
+        <h3>Progressive Levels</h3>
+        <p>Each chamber grows harder — sharper rhetoric, faster rebuttals, higher stakes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a2 2 0 0 0 0 4h1M17 6h3a2 2 0 0 1 0 4h-1"/></svg></div>
+        <h3>Achievements</h3>
+        <p>Unlock rare badges for flawless logic, brutal comebacks, and philosophical upsets.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M6 21V9l6-6 6 6v12"/></svg></div>
+        <h3>Leaderboard</h3>
+        <p>Compete with debaters around the world for the title of sharpest mind alive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- ============================= TESTIMONIALS ============================= -->
+<section id="testimonials" aria-labelledby="testi-heading">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Voices From the Arena</p>
+      <h2 id="testi-heading">Those Who Escaped</h2>
+    </div>
+
+    <div class="testi-grid reveal-stagger">
+      <article class="testi-card">
+        <div class="testi-stars" aria-hidden="true">
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+        </div>
+        <p>"I lost to Adi Shankaracharya twice before I understood the trap. On my third try, beating him felt more earned than any boss fight I've played."</p>
+        <div class="testi-person">
+          <span class="testi-avatar" aria-hidden="true">AK</span>
+          <div><div class="testi-name">A. Kulkarni</div><div class="testi-role">Escaped in 3h 12m</div></div>
+        </div>
+      </article>
+
+      <article class="testi-card">
+        <div class="testi-stars" aria-hidden="true">
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+        </div>
+        <p>"Chanakya remembers everything you've said, and he's already three moves ahead. I've never felt this outmaneuvered by a game before."</p>
+        <div class="testi-person">
+          <span class="testi-avatar" aria-hidden="true">SB</span>
+          <div><div class="testi-name">S. Bhatt</div><div class="testi-role">Still stuck on Chamber 2</div></div>
+        </div>
+      </article>
+
+      <article class="testi-card">
+        <div class="testi-stars" aria-hidden="true">
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+          <svg viewBox="0 0 20 20"><polygon points="10,1 12.6,7 19,7.5 14,12 15.5,18.5 10,15 4.5,18.5 6,12 1,7.5 7.4,7"/></svg>
+        </div>
+        <p>"The final chamber with Kalam genuinely gave me chills. This is the first debate game that actually made my hands shake before I hit send."</p>
+        <div class="testi-person">
+          <span class="testi-avatar" aria-hidden="true">VK</span>
+          <div><div class="testi-name">V. Krishnan</div><div class="testi-role">Escaped in 2h 47m</div></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<!-- ============================= FINAL CTA ============================= -->
+<section id="enter" class="final-cta" aria-labelledby="cta-heading">
+  <div class="container">
+    <div class="final-cta-panel reveal">
+      <p class="eyebrow">The Gate Is Open</p>
+      <h2 id="cta-heading">Your Mind Is the Only Weapon You Brought.</h2>
+      <p>Six thinkers. Six chambers. One way out. Step through the gate and prove your logic can survive what's waiting on the other side.</p>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\debateroom.html" class="btn btn-primary" data-ripple>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3v7h7l-9 11v-7H5l9-11z"/></svg>
+        Enter Arena Now
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================= FOOTER ============================= -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand" aria-label="Arena of Minds — home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="17" stroke="url(#g2)" stroke-width="1.4"/>
+              <circle cx="20" cy="20" r="6" fill="url(#g2)" opacity=".85"/>
+              <defs><linearGradient id="g2" x1="0" y1="0" x2="40" y2="40"><stop offset="0" stop-color="#4fd8ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+            </svg>
+          </span>
+          <span>ARENA <small>OF MINDS</small></span>
+        </a>
+        <p>A debate-driven escape through an arena built from history's sharpest minds. Think fast. Argue faster.</p>
+        <div class="social-row">
+          <a href="#" class="social-icon" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.1 3.1 0 0 0-.9-2.5c3-.3 6-1.5 6-6.6a5 5 0 0 0-1.4-3.5 4.6 4.6 0 0 0-.1-3.5s-1.1-.4-3.6 1.3a12.4 12.4 0 0 0-6.6 0C6.9 1.6 5.8 2 5.8 2a4.6 4.6 0 0 0-.1 3.5A5 5 0 0 0 4.3 9c0 5.1 3 6.3 6 6.6a3.1 3.1 0 0 0-.9 2.4V22"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Discord">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM17 12a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/><path d="M7.5 6.5C9 5.7 10.4 5.5 12 5.5s3 .2 4.5 1M4.5 17c1 .8 3 1.5 3 1.5l1-1.7M19.5 17c-1 .8-3 1.5-3 1.5l-1-1.7M6 9.5C4.5 11 4 13.5 4.5 17c1.6 1.2 4 2 7.5 2s5.9-.8 7.5-2c.5-3.5 0-6-1.5-7.5"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="X (Twitter)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16M20 4L4 20"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <a href="#story">Story</a>
+        <a href="#opponents">Opponents</a>
+        <a href="#features">Features</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:team@nextminds.studio">team@nextminds.studio</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 Arena of Minds. All debates fictional. All defeats permanent.</span>
+      <span>Built with logic, light and a little dread.</span>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+ <!-- Connect Javascript-->
+<script src="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\js\index.js"></script>
+
+</body>
+</html>

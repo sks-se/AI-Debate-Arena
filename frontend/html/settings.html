@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Arena of Minds</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Connect CSS-->
+<link rel="stylesheet" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\css\settings.css">
+
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+
+<header class="top-nav">
+  <div class="nav-row">
+    <a class="brand" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\index.html">
+      <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="url(#g1)" stroke-width="1.4"/><circle cx="20" cy="20" r="6" fill="url(#g1)" opacity=".85"/><defs><linearGradient id="g1" x1="0" y1="0" x2="40" y2="40"><stop offset="0" stop-color="#4fd8ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
+      Arena of Minds
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\index.html">Home</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\dashboard.html">Dashboard</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\debateroom.html">Debate</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\leaderboard.html">Leaderboard</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\achievements.html">Achievements</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\settings.html" class="active">Settings</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="page-head reveal">
+      <p class="eyebrow">Arena Configuration</p>
+      <h1>Settings</h1>
+    </div>
+
+    <!-- AUDIO -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19 9a5 5 0 0 1 0 6M22 6a9 9 0 0 1 0 12"/></svg>Audio</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Music Volume</span><span class="sl-desc">Ambient score and chamber music.</span></div>
+        <div class="setting-control">
+          <div class="slider-wrap">
+            <input type="range" id="music-vol" min="0" max="100" value="70" aria-label="Music volume">
+            <span class="slider-val" id="music-vol-val">70%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Sound Effects</span><span class="sl-desc">UI clicks, hits, and debate impact sounds.</span></div>
+        <div class="setting-control">
+          <div class="slider-wrap">
+            <input type="range" id="sfx-vol" min="0" max="100" value="85" aria-label="Sound effects volume">
+            <span class="slider-val" id="sfx-vol-val">85%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Mute All Audio</span><span class="sl-desc">Silence music and effects entirely.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="mute-all"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMEPLAY -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>Gameplay</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Difficulty</span><span class="sl-desc">Affects opponent aggression and scoring thresholds.</span></div>
+        <div class="setting-control">
+          <div class="segmented" id="difficulty-seg" role="tablist" aria-label="Difficulty">
+            <button class="active" data-val="Easy">Easy</button>
+            <button data-val="Normal">Normal</button>
+            <button data-val="Hard">Hard</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Language</span><span class="sl-desc">Text and voice language used in the Arena.</span></div>
+        <div class="setting-control">
+          <div class="select-wrap">
+            <select id="language-select" aria-label="Language">
+              <option>English</option>
+              <option>Español</option>
+              <option>Français</option>
+              <option>Deutsch</option>
+              <option>日本語</option>
+              <option>Português</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Animations</span><span class="sl-desc">Cinematic transitions, particles and screen effects.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="animations-toggle" checked><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCESSIBILITY -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>Accessibility</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Reduce Motion</span><span class="sl-desc">Minimizes screen shake, particles, and parallax.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="reduce-motion"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">High Contrast</span><span class="sl-desc">Increases text and border contrast throughout the Arena.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="high-contrast"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Larger Text</span><span class="sl-desc">Increases chat and HUD text size.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="larger-text"><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Screen Reader Optimizations</span><span class="sl-desc">Adds extra live-region announcements during debates.</span></div>
+        <div class="setting-control">
+          <label class="switch"><input type="checkbox" id="sr-opt" checked><span class="track"></span><span class="thumb"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPEARANCE -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-4-4 4 4 0 0 1 4-4A10 10 0 0 0 12 2z"/></svg>Theme</h2>
+
+      <div class="setting-row">
+        <div class="setting-label"><span class="sl-name">Arena Palette</span><span class="sl-desc">Choose the accent colors used across the Arena.</span></div>
+        <div class="setting-control">
+          <div class="theme-row" id="theme-row">
+            <div class="theme-swatch active" data-theme="void" style="background:linear-gradient(135deg,#4fd8ff,#a855f7);" title="Void (default)"></div>
+            <div class="theme-swatch" data-theme="ember" style="background:linear-gradient(135deg,#ff785a,#d9b46a);" title="Ember"></div>
+            <div class="theme-swatch" data-theme="frost" style="background:linear-gradient(135deg,#4fd8ff,#9ef7c4);" title="Frost"></div>
+            <div class="theme-swatch" data-theme="royal" style="background:linear-gradient(135deg,#a855f7,#d9b46a);" title="Royal"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section class="settings-panel reveal">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</h2>
+
+      <div class="account-grid">
+        <div class="field"><label for="acc-username">Username</label><input type="text" id="acc-username" value="K. Wyrenth"></div>
+        <div class="field"><label for="acc-email">Email</label><input type="email" id="acc-email" value="wyrenth@arenaofminds.game"></div>
+      </div>
+
+      <div class="account-actions">
+        <button class="btn btn-primary" id="save-account">Save Changes</button>
+        <button class="btn btn-ghost" id="reset-defaults">Reset to Defaults</button>
+        <button class="btn btn-danger" id="log-out">Log Out</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>© 2026 Arena of Minds. Settings are stored for this session only.</footer>
+
+<div class="save-toast" id="save-toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-text">Settings saved</span>
+</div>
+
+<!-- Connect Javascript-->
+<script src="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\js\settings.js"></script>
+</body>
+</html>

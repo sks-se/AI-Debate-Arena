@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debate Chamber — Arena of Minds</title>
+<meta name="description" content="Face a legendary thinker in live debate. Your logic is the only weapon you brought.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+ <!-- Connect CSS-->
+<link rel="stylesheet" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\css\debateroom.css">
+</head>
+<body>
+
+<div id="bg" aria-hidden="true"></div>
+
+<div class="shell">
+
+  <!-- ============================= TOP HUD ============================= -->
+  <header class="hud" aria-label="Player status">
+    <a class="hud-back" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Leave Chamber
+    </a>
+    <a class="hud-nav-link" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\leaderboard.html" aria-label="Leaderboard" title="Leaderboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M6 21V9l6-6 6 6v12"/></svg>
+    </a>
+    <a class="hud-nav-link" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\achievements.html" aria-label="Achievements" title="Achievements">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a2 2 0 0 0 0 4h1M17 6h3a2 2 0 0 1 0 4h-1"/></svg>
+    </a>
+    <div class="hud-divider" aria-hidden="true"></div>
+
+    <div class="hud-stat">
+      <span class="hud-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg></span>
+      <div><div class="hud-label">Level</div><div class="hud-value" id="stat-level">7</div></div>
+    </div>
+
+    <div class="hud-bar-group">
+      <div class="hud-bar-top"><span class="hud-label">XP</span><span class="hud-value" id="xp-text">1,240 / 2,000</span></div>
+      <div class="hud-bar-track"><div class="hud-bar-fill xp" id="xp-fill" style="width:62%"></div></div>
+    </div>
+
+    <div class="hud-bar-group">
+      <div class="hud-bar-top"><span class="hud-label">Escape Progress</span><span class="hud-value" id="escape-text">34%</span></div>
+      <div class="hud-bar-track"><div class="hud-bar-fill escape" id="escape-fill" style="width:34%"></div></div>
+    </div>
+
+    <div class="hud-stat">
+      <span class="hud-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span>
+      <div><div class="hud-label">Coins</div><div class="hud-value" id="stat-coins">312</div></div>
+    </div>
+
+    <div class="hud-timer" id="hud-timer">
+      <span class="hud-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg></span>
+      <div><div class="hud-label">Time Remaining</div><div class="hud-value" id="timer-text">09:42</div></div>
+    </div>
+  </header>
+
+  <!-- ============================= MAIN SPLIT ============================= -->
+  <div class="debate-main">
+
+    <!-- ===================== LEFT: OPPONENT PANEL ===================== -->
+    <aside class="opponent-panel" aria-label="Opponent status">
+
+      <div class="opp-switcher" id="opp-switcher" role="tablist" aria-label="Choose opponent"></div>
+
+      <div class="portrait-frame">
+        <div class="ring r1" aria-hidden="true"></div>
+        <div class="ring r2" aria-hidden="true"></div>
+        <div class="glow" aria-hidden="true"></div>
+        <div class="scan-line" aria-hidden="true"></div>
+        <span class="spark" style="left:22%;animation-delay:0s;"></span>
+        <span class="spark" style="left:52%;animation-delay:1s;"></span>
+        <span class="spark" style="left:74%;animation-delay:2s;"></span>
+
+        <!-- low-poly "3D style" bust placeholder -->
+        <svg class="bust" viewBox="0 0 200 200" id="bust-svg" aria-hidden="true">
+          <polygon points="100,20 130,55 100,80 70,55" fill="var(--accent)" opacity=".9"/>
+          <polygon points="70,55 100,80 90,120 55,95" fill="var(--accent)" opacity=".65"/>
+          <polygon points="130,55 100,80 110,120 145,95" fill="var(--accent)" opacity=".5"/>
+          <polygon points="55,95 90,120 80,170 30,175 25,120" fill="var(--accent)" opacity=".35"/>
+          <polygon points="145,95 110,120 120,170 170,175 175,120" fill="var(--accent)" opacity=".22"/>
+          <polygon points="80,170 120,170 130,200 70,200" fill="var(--accent)" opacity=".18"/>
+          <polygon points="90,120 110,120 120,170 80,170" fill="var(--accent)" opacity=".75"/>
+        </svg>
+
+        <span class="portrait-tag">CORE UPLINK STABLE</span>
+      </div>
+
+      <div class="opp-identity">
+        <h1 id="opp-name">Socrates</h1>
+        <p class="opp-role" id="opp-role">The Philosopher</p>
+        <div class="difficulty-row">
+          DIFFICULTY
+          <span class="diff-stars" id="opp-diff" aria-label="Difficulty 3 out of 5"></span>
+        </div>
+      </div>
+
+      <div class="stat-block" aria-label="Opponent resolve">
+        <div class="stat-block-top"><span class="lab">Resolve</span><span class="val" id="hp-text">100%</span></div>
+        <div class="hp-track"><div class="hp-ticks" aria-hidden="true"></div><div class="hp-fill" id="hp-fill" style="width:100%"></div></div>
+      </div>
+
+      <div class="mood-chip">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="hud-label">Mood</span>
+        <span class="mood-word" id="mood-word">Composed</span>
+      </div>
+
+      <div class="ability-card">
+        <button class="ability-ring-btn" id="ability-btn" style="--cd:0" aria-label="Use special ability: Socratic Trap">
+          <span class="ability-ring-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5z"/></svg>
+          </span>
+          <span class="ability-cd-text" id="ability-cd-text">18s</span>
+        </button>
+        <div class="ability-text">
+          <h3 id="ability-name">Socratic Trap</h3>
+          <p id="ability-desc">Force a contradiction in their last claim for bonus damage to their resolve.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===================== RIGHT: CHAT PANEL ===================== -->
+    <section class="chat-panel" aria-label="Debate transcript">
+      <div class="chat-header">
+        <h2>Chamber 03 — Live Debate</h2>
+        <div class="clarity-group" aria-label="Your clarity">
+          <span class="hud-label">Your Clarity</span>
+          <div class="clarity-track"><div class="clarity-fill" id="clarity-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="chat-scroll" id="chat-scroll" role="log" aria-live="polite" aria-label="Debate messages"></div>
+
+      <div class="input-dock">
+        <div class="hint-pop" id="hint-pop">
+          <p class="hint-eyebrow">Debate Tip</p>
+          <p id="hint-text">Question his premise before he questions yours — Socrates wins by making you define your terms.</p>
+        </div>
+        <div class="inv-pop" id="inv-pop">
+          <p class="inv-title">Inventory</p>
+          <div class="inv-grid">
+            <div class="inv-item" title="Logic Shield — blocks one rebuttal"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg><span class="count">2</span></div>
+            <div class="inv-item" title="Rhetorical Dagger — sharpens your next reply"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3l7 7-9 9-7-7z M5 19l3-1 1-3"/></svg><span class="count">1</span></div>
+            <div class="inv-item" title="Time Dilation — adds 60s to the clock"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg><span class="count">1</span></div>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <button class="icon-btn" id="mic-btn" aria-label="Speak your argument" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v4M8 22h8"/></svg>
+          </button>
+
+          <div class="text-input-wrap">
+            <label for="chat-input" class="sr-only">Type your argument</label>
+            <input type="text" id="chat-input" placeholder="Present your argument…" autocomplete="off">
+          </div>
+
+          <button class="icon-btn" id="hint-btn" aria-label="Show debate hint" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.6.5 1 1.3 1 2.2V16h6v-1.3c0-.9.4-1.7 1-2.2A6 6 0 0 0 12 2z"/></svg>
+          </button>
+
+          <button class="icon-btn" id="inv-btn" aria-label="Open inventory" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3zM3 7l3-4h12l3 4M9 11a3 3 0 0 0 6 0"/></svg>
+          </button>
+
+          <button class="send-btn" id="send-btn" aria-label="Send argument">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============================= SCORING OVERLAY ============================= -->
+<div class="scoring-overlay" id="scoring-overlay" role="dialog" aria-live="polite" aria-label="Argument analysis">
+  <div class="scoring-card" id="scoring-card">
+    <div class="scoring-head">
+      <span class="eyebrow2">Analyzing Argument</span>
+      <span class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+    </div>
+
+    <div class="score-rows" id="score-rows">
+      <div class="score-row" data-metric="Logic">
+        <div class="score-row-top"><span>Logic</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Evidence">
+        <div class="score-row-top"><span>Evidence</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Creativity">
+        <div class="score-row-top"><span>Creativity</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Persuasion">
+        <div class="score-row-top"><span>Persuasion</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+      <div class="score-row" data-metric="Confidence">
+        <div class="score-row-top"><span>Confidence</span><span class="score-val" data-val>0</span></div>
+        <div class="score-track"><div class="score-fill" data-fill></div></div>
+      </div>
+    </div>
+
+    <div class="overall-wrap">
+      <div class="overall-ring" id="overall-ring">
+        <div class="overall-num-wrap"><span class="overall-num" id="overall-num">0</span><span class="overall-max">/100</span></div>
+      </div>
+      <p class="overall-tag" id="overall-tag">Argument Lands</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= FULL-SCREEN VICTORY ============================= -->
+<div class="victory-overlay" id="victory-overlay" role="dialog" aria-modal="true" aria-labelledby="victory-heading">
+  <div class="victory-glow" aria-hidden="true"></div>
+  <div class="victory-portal" aria-hidden="true"><span class="vring"></span><span class="vring v2"></span></div>
+  <div class="confetti-field" id="confetti-field" aria-hidden="true"></div>
+
+  <div class="victory-content">
+    <p class="eyebrow2">Room Cleared</p>
+    <h2 class="victory-title" id="victory-heading">ROOM CLEARED</h2>
+
+    <div class="achievement-card">
+      <span class="achievement-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a2 2 0 0 0 0 4h1M17 6h3a2 2 0 0 1 0 4h-1"/></svg>
+      </span>
+      <span class="achievement-text">
+        <span class="ach-label">Achievement Unlocked</span>
+        <span class="ach-name" id="achievement-name">The Philosopher</span>
+      </span>
+    </div>
+
+    <div class="victory-rewards">
+      <div class="reward-stat"><div class="rv" id="victory-xp">+0</div><div class="rl">XP Gained</div></div>
+      <div class="reward-stat"><div class="rv" id="victory-coins">+0</div><div class="rl">Coins Earned</div></div>
+    </div>
+
+    <p class="next-opponent-line">Next Opponent Unlocked — <span id="victory-next-name">Sun Tzu</span></p>
+
+    <button class="btn btn-gold" id="victory-continue">Continue</button>
+  </div>
+</div>
+
+<!-- ============================= FULL-SCREEN DEFEAT ============================= -->
+<div class="defeat-overlay" id="defeat-overlay" role="dialog" aria-modal="true" aria-labelledby="defeat-heading">
+  <div class="defeat-vignette" aria-hidden="true"></div>
+  <svg class="crack-svg" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden="true">
+    <path class="crack-path c1" d="M400 0 L370 140 L430 210 L360 300 L410 380 L340 500 L380 600"/>
+    <path class="crack-path c2" d="M400 0 L470 120 L420 190 L500 260 L440 350"/>
+    <path class="crack-path c3" d="M0 300 L150 280 L200 320 L340 300"/>
+    <path class="crack-path c4" d="M800 320 L650 300 L600 340 L460 320"/>
+  </svg>
+
+  <div class="defeat-content">
+    <p class="defeat-laugh" id="defeat-laugh">"...predictable, as always."</p>
+    <h2 class="defeat-title" id="defeat-heading">You Have Been Defeated</h2>
+
+    <div class="lives-row">
+      <span class="hud-label">Lives Remaining</span>
+      <span class="lives-hearts" id="lives-hearts" aria-label="2 lives remaining"></span>
+    </div>
+
+    <div class="defeat-actions">
+      <button class="btn btn-primary" id="defeat-retry">Retry</button>
+      <button class="btn btn-ghost" id="defeat-hint">Hint</button>
+      <button class="btn btn-ghost" id="defeat-exit">Exit</button>
+    </div>
+  </div>
+</div>
+
+!-- Connect Javascript-->
+<script src="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\js\debateroom.js"></script>
+
+</body>
+</html>

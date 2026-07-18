@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leaderboard — Arena of Minds</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+ <!-- Connect CSS-->
+<link rel="stylesheet" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\css\leaderboard.css">
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+
+<header class="top-nav">
+  <div class="container nav-row">
+    <a class="brand" href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\index.html">
+      <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="17" stroke="url(#g1)" stroke-width="1.4"/><circle cx="20" cy="20" r="6" fill="url(#g1)" opacity=".85"/><defs><linearGradient id="g1" x1="0" y1="0" x2="40" y2="40"><stop offset="0" stop-color="#4fd8ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs></svg>
+      Arena of Minds
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\debateroom.html">Debate</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\leaderboard.html" class="active">Leaderboard</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\achievements.html">Achievements</a>
+      <a href="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\html\settings.html">Settings</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="page-head reveal">
+      <p class="eyebrow">Global Rankings</p>
+      <h1>The Arena Leaderboard</h1>
+      <p>The sharpest minds to ever escape the chambers — ranked by speed, precision and sheer nerve.</p>
+    </div>
+
+    <div class="podium reveal" id="podium"></div>
+
+    <div class="lb-table reveal" id="lb-table">
+      <div class="lb-row head">
+        <span>Rank</span><span></span><span>Player</span><span class="col-time">Escape Time</span><span class="col-wins">Debates Won</span><span class="col-difficulty">Difficulty</span>
+      </div>
+      <div id="lb-rows"></div>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 Arena of Minds. Rankings reset with each Arena cycle.</footer>
+
+<!-- Connect Javascript-->
+<script src="C:\Users\Aid Noida\Downloads\AI Debate Areana\frontend\js\leaderboard.js"></script>
+</body>
+</html>
