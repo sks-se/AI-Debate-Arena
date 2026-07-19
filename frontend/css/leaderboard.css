@@ -79,6 +79,7 @@ main{padding:56px 0 90px;}
   content:'';position:absolute;inset:-4px;border-radius:50%;padding:2px;
   background:conic-gradient(var(--ring1),var(--ring2),var(--ring1));
   -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;animation:ring-spin 6s linear infinite;
 }
 @keyframes ring-spin{to{transform:rotate(360deg);}}
@@ -117,3 +118,40 @@ main{padding:56px 0 90px;}
 .diff-stars i.filled{background:var(--gold-relic);box-shadow:0 0 5px var(--gold-relic);}
 
 footer{padding:40px 0;text-align:center;color:var(--ink-faint);font-size:.85rem;border-top:1px solid var(--line);}
+
+/* ============== RESPONSIVE ============== */
+@media (max-width:760px){
+  main{padding:40px 0 70px;}
+  .page-head{margin-bottom:34px;}
+  .page-head p{font-size:.92rem;padding:0 8px;}
+  .podium{gap:12px;margin-bottom:40px;}
+  .podium-card{padding:20px 14px 18px;}
+  .podium-card.rank-1{padding-top:24px;}
+  .podium-avatar{width:60px;height:60px;font-size:1.05rem;}
+  .rank-1 .podium-avatar{width:72px;height:72px;font-size:1.25rem;}
+  .podium-name{font-size:.98rem;}
+  .rank-1 .podium-name{font-size:1.1rem;}
+  .podium-stats{gap:10px;}
+  .nav-row{gap:12px;}
+  .nav-links{gap:2px;width:100%;justify-content:flex-start;order:3;}
+  .nav-links a{padding:7px 9px;font-size:.62rem;}
+  .lb-row{padding:12px 14px;gap:10px;}
+}
+
+@media (max-width:480px){
+  body{font-size:15.5px;}
+  .container{width:calc(100% - 28px);}
+  .brand{font-size:.92rem;}
+  .brand svg{width:26px;height:26px;}
+  .page-head h1{font-size:1.7rem;}
+  .eyebrow{font-size:.62rem;letter-spacing:.24em;}
+  .podium{grid-template-columns:1fr;gap:14px;}
+  .podium-card.rank-1,.podium-card.rank-2,.podium-card.rank-3{order:0;}
+  .podium-rank{font-size:.62rem;padding:3px 10px;margin-bottom:10px;}
+  .podium-avatar{margin-bottom:10px;}
+  .podium-meta{font-size:.62rem;margin-bottom:10px;}
+  .lb-row{grid-template-columns:30px 30px 1fr;gap:8px;padding:11px 12px;}
+  .lb-row .col-time{display:none;}
+  .lb-avatar{width:28px;height:28px;font-size:.58rem;}
+  .lb-user{font-size:.85rem;gap:8px;}
+}

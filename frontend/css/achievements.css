@@ -117,3 +117,31 @@ main{padding:56px 0 90px;}
 
 footer{padding:40px 0;text-align:center;color:var(--ink-faint);font-size:.85rem;border-top:1px solid var(--line);margin-top:40px;}
 
+/* ============== RESPONSIVE ============== */
+@media (max-width:760px){
+  main{padding:40px 0 70px;}
+  .page-head{margin-bottom:14px;}
+  .page-head p{font-size:.92rem;padding:0 8px;}
+  .progress-summary{flex-direction:column;gap:10px;margin:20px auto 36px;}
+  .ach-grid{gap:16px;grid-template-columns:1fr;}
+  .ach-card{padding:22px 20px;}
+  .nav-row{gap:12px;}
+  .nav-links{gap:2px;width:100%;justify-content:flex-start;order:3;}
+  .nav-links a{padding:7px 9px;font-size:.62rem;}
+}
+
+@media (max-width:480px){
+  body{font-size:15.5px;}
+  .container{width:calc(100% - 28px);}
+  .brand{font-size:.92rem;}
+  .brand svg{width:26px;height:26px;}
+  .page-head h1{font-size:1.7rem;}
+  .eyebrow{font-size:.62rem;letter-spacing:.24em;}
+  .progress-summary .bar{width:140px;}
+  .ach-card{padding:20px 16px;}
+  .ach-icon{width:48px;height:48px;margin-bottom:14px;}
+  .ach-icon svg{width:24px;height:24px;}
+  .ach-name{font-size:1.08rem;}
+  .ach-desc{font-size:.88rem;margin-bottom:14px;}
+  .claim-btn{font-size:.62rem;padding:9px;}
+}
