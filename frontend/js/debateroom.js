@@ -8,7 +8,7 @@
      ========================================================================= */
   var OPPONENTS = [
     {
-      id:'socrates', name:'Socrates', role:'The Philosopher', accent:'#4fd8ff', difficulty:3,
+      id:'adi_shankaracharya', name:'Socrates', role:'The Philosopher', accent:'#4fd8ff', difficulty:3,
       ability:{name:'Socratic Trap', desc:'Force a contradiction in their last claim for bonus damage to their resolve.'},
       hint:'Question his premise before he questions yours — Socrates wins by making you define your terms.',
       laugh:'"...and yet you still haven\'t defined your terms."',
@@ -21,7 +21,7 @@
       ]
     },
     {
-      id:'suntzu', name:'Sun Tzu', role:'The Strategist', accent:'#ff785a', difficulty:4,
+      id:'chanakya', name:'Sun Tzu', role:'The Strategist', accent:'#ff785a', difficulty:4,
       ability:{name:'Flanking Logic', desc:'Redirect their strongest point into a weakness they never saw coming.'},
       hint:'Do not meet his strongest claim head-on — attack the assumption it depends on.',
       laugh:'"I told you — won before it began."',
@@ -34,7 +34,7 @@
       ]
     },
     {
-      id:'machiavelli', name:'Machiavelli', role:'The Realist', accent:'#a855f7', difficulty:3,
+      id:'shivaji_maharaj', name:'Machiavelli', role:'The Realist', accent:'#a855f7', difficulty:3,
       ability:{name:'Feigned Concession', desc:'Pretend to agree, then use their own point against them next turn.'},
       hint:'He rewards ideals with traps. Ground every claim in something provably practical.',
       laugh:'"Idealism, again. How predictable."',
@@ -47,7 +47,7 @@
       ]
     },
     {
-      id:'einstein', name:'Einstein', role:'The Genius', accent:'#4fd8ff', difficulty:4,
+      id:'srinivasa_ramanujan', name:'Einstein', role:'The Genius', accent:'#4fd8ff', difficulty:4,
       ability:{name:'Thought Experiment', desc:'Reframe the debate entirely, forcing them to argue on your terms.'},
       hint:'He tests consistency across scales. If your logic breaks at the extreme, he will find it.',
       laugh:'"It only worked close up. I told you it would break."',
@@ -60,7 +60,7 @@
       ]
     },
     {
-      id:'cleopatra', name:'Cleopatra', role:'The Sovereign', accent:'#d9b46a', difficulty:3,
+      id:'razia_sultan', name:'Cleopatra', role:'The Sovereign', accent:'#d9b46a', difficulty:3,
       ability:{name:"Royal Decree", desc:'Command the tempo of the debate, forcing a rushed and weaker reply.'},
       hint:'She rewards composure. Slow down — a hurried answer is exactly what she wants.',
       laugh:'"Empires outlasted better arguments than yours."',
@@ -73,7 +73,7 @@
       ]
     },
     {
-      id:'tesla', name:'Nikola Tesla', role:'The Inventor', accent:'#4fd8ff', difficulty:4,
+      id:'apj_abdul_kalam', name:'Nikola Tesla', role:'The Inventor', accent:'#4fd8ff', difficulty:4,
       ability:{name:'Overload', desc:'Chain two rapid rebuttals together before they can fully respond.'},
       hint:'He moves fast between ideas. Anchor him — ask him to finish one thought before starting another.',
       laugh:'"...three steps ahead, as promised."',
@@ -475,21 +475,46 @@
         state.clarity = Math.max(0, state.clarity - (8 + Math.random()*10));
         els.clarityFill.style.width = state.clarity + '%';
       }
+showThinking(async function () {
 
-      showThinking(function(){
+    var op = OPPONENTS[state.opponentIndex];
+
+    try {
+      console.log(op.id);
+        const response = await fetch("http://127.0.0.1:8000/debate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                character: op.id,
+                message: text
+            })
+        });
+
+        const data = await response.json();
+
         hideThinking();
-        var op = OPPONENTS[state.opponentIndex];
-        var line = op.lines[state.lineCursor % op.lines.length];
-        state.lineCursor++;
-        appendMessage('ai', op.name, line, true);
 
-        var dmg = win ? (14 + (overall-70)*0.4) : Math.max(0, (overall-40)*0.2);
+        appendMessage("ai", op.name, data.reply, true);
+
+        var dmg = win ? (14 + (overall - 70) * 0.4) : Math.max(0, (overall - 40) * 0.2);
         applyDamage(dmg);
 
-        if(!win && state.clarity <= 0 && state.hp > 0){
-          setTimeout(triggerDefeat, 700);
+        if (!win && state.clarity <= 0 && state.hp > 0) {
+            setTimeout(triggerDefeat, 700);
         }
-      });
+
+    } catch (err) {
+
+        hideThinking();
+        console.error(err);
+        appendMessage("ai", "System", err.message);
+
+    }
+
+});
+      
     });
   }
 
