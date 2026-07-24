@@ -7,85 +7,110 @@
      resets the local debate state (resolve, mood, chat) for a fresh demo.
      ========================================================================= */
   var OPPONENTS = [
-    {
-      id:'adi_shankaracharya', name:'Socrates', role:'The Philosopher', accent:'#4fd8ff', difficulty:3,
-      ability:{name:'Socratic Trap', desc:'Force a contradiction in their last claim for bonus damage to their resolve.'},
-      hint:'Question his premise before he questions yours — Socrates wins by making you define your terms.',
-      laugh:'"...and yet you still haven\'t defined your terms."',
-      lines:[
-        "And how would you define \"truth,\" before you claim to speak it?",
-        "You assume your conclusion is the beginning — walk me back further.",
-        "If that were true, would it not also excuse the very thing you condemn?",
-        "I only ask because you seemed so certain a moment ago.",
-        "Strip away the metaphor — what is the argument underneath it?"
-      ]
+
+{
+    id: "adi_shankaracharya",
+    name: "Adi Shankaracharya",
+    role: "The Philosopher",
+    accent: "#4fd8ff",
+    difficulty: 3,
+
+    ability: {
+        name: "Advaita Insight",
+        desc: "Expose contradictions by questioning assumptions."
     },
-    {
-      id:'chanakya', name:'Sun Tzu', role:'The Strategist', accent:'#ff785a', difficulty:4,
-      ability:{name:'Flanking Logic', desc:'Redirect their strongest point into a weakness they never saw coming.'},
-      hint:'Do not meet his strongest claim head-on — attack the assumption it depends on.',
-      laugh:'"I told you — won before it began."',
-      lines:[
-        "You attacked where I was strongest. That was your first mistake.",
-        "A wise debater wins before the argument even begins.",
-        "You have shown me your position. Now I know exactly where it breaks.",
-        "Retreat is also a strategy — are you certain you should press further?",
-        "I anticipated this claim three exchanges ago."
-      ]
+
+    hint: "Question assumptions before conclusions.",
+
+    laugh: "Truth is not defeated by noise."
+},
+
+{
+    id: "chanakya",
+    name: "Chanakya",
+    role: "The Strategist",
+    accent: "#ff785a",
+    difficulty: 4,
+
+    ability: {
+        name: "Master Strategy",
+        desc: "Turn the opponent's strongest argument into their greatest weakness."
     },
-    {
-      id:'shivaji_maharaj', name:'Machiavelli', role:'The Realist', accent:'#a855f7', difficulty:3,
-      ability:{name:'Feigned Concession', desc:'Pretend to agree, then use their own point against them next turn.'},
-      hint:'He rewards ideals with traps. Ground every claim in something provably practical.',
-      laugh:'"Idealism, again. How predictable."',
-      lines:[
-        "A charming principle. Now tell me who benefits when it fails.",
-        "I will grant you that point — it will cost you more later.",
-        "Idealism is a luxury. Let's discuss what actually happens.",
-        "You argue as the world should be. I argue as it is.",
-        "Interesting — and what would you sacrifice to prove that true?"
-      ]
+
+    hint: "Emotion loses where strategy begins.",
+
+    laugh: "Victory is earned long before the debate begins."
+},
+
+{
+    id: "shivaji_maharaj",
+    name: "Chhatrapati Shivaji Maharaj",
+    role: "The Leader",
+    accent: "#f5b041",
+    difficulty: 4,
+
+    ability: {
+        name: "Swarajya Resolve",
+        desc: "Break weak leadership arguments with courage and responsibility."
     },
-    {
-      id:'srinivasa_ramanujan', name:'Einstein', role:'The Genius', accent:'#4fd8ff', difficulty:4,
-      ability:{name:'Thought Experiment', desc:'Reframe the debate entirely, forcing them to argue on your terms.'},
-      hint:'He tests consistency across scales. If your logic breaks at the extreme, he will find it.',
-      laugh:'"It only worked close up. I told you it would break."',
-      lines:[
-        "Imagine your claim taken to its limit — does it still hold?",
-        "An elegant idea. Now show me the frame it depends on.",
-        "You've described an effect. I am still waiting for the cause.",
-        "Two claims cannot both be true if they contradict at the edges.",
-        "Curious — your logic works close up, but what happens far away?"
-      ]
+
+    hint: "A leader protects people before protecting pride.",
+
+    laugh: "Strength without righteousness never lasts."
+},
+
+{
+    id: "srinivasa_ramanujan",
+    name: "Srinivasa Ramanujan",
+    role: "The Analytical Genius",
+    accent: "#6dd5fa",
+    difficulty: 4,
+
+    ability: {
+        name: "Infinite Pattern",
+        desc: "Reveal hidden flaws through logic and mathematical reasoning."
     },
-    {
-      id:'razia_sultan', name:'Cleopatra', role:'The Sovereign', accent:'#d9b46a', difficulty:3,
-      ability:{name:"Royal Decree", desc:'Command the tempo of the debate, forcing a rushed and weaker reply.'},
-      hint:'She rewards composure. Slow down — a hurried answer is exactly what she wants.',
-      laugh:'"Empires outlasted better arguments than yours."',
-      lines:[
-        "You speak quickly. Haste is rarely mistaken for conviction.",
-        "I have negotiated with emperors. Your argument will need more than confidence.",
-        "A bold claim — but boldness alone never held a throne.",
-        "Choose your next words as if a kingdom depended on them.",
-        "I've outlasted better arguments than this one."
-      ]
+
+    hint: "Every conclusion should follow from evidence.",
+
+    laugh: "Numbers rarely agree with unsupported claims."
+},
+
+{
+    id: "razia_sultan",
+    name: "Razia Sultana",
+    role: "The Sovereign",
+    accent: "#b565f2",
+    difficulty: 4,
+
+    ability: {
+        name: "Royal Judgment",
+        desc: "Challenge arguments lacking justice, balance, and fairness."
     },
-    {
-      id:'apj_abdul_kalam', name:'Nikola Tesla', role:'The Inventor', accent:'#4fd8ff', difficulty:4,
-      ability:{name:'Overload', desc:'Chain two rapid rebuttals together before they can fully respond.'},
-      hint:'He moves fast between ideas. Anchor him — ask him to finish one thought before starting another.',
-      laugh:'"...three steps ahead, as promised."',
-      lines:[
-        "You've built an argument on one idea. I have three running in parallel.",
-        "The present moment agrees with you. The future will not.",
-        "An interesting spark — but sparks alone do not power an argument.",
-        "You're reacting to what I said. I'm already three steps ahead.",
-        "Everyone doubts the current until it's already reached them."
-      ]
-    }
-  ];
+
+    hint: "Justice is stronger than authority.",
+
+    laugh: "A throne is earned through wisdom, not words."
+},
+
+{
+    id: "apj_abdul_kalam",
+    name: "Dr. A.P.J. Abdul Kalam",
+    role: "The Visionary",
+    accent: "#5dade2",
+    difficulty: 3,
+
+    ability: {
+        name: "Ignited Minds",
+        desc: "Transform criticism into innovation and opportunity."
+    },
+
+    hint: "Dreams require knowledge, effort, and action.",
+
+    laugh: "Every failure is simply another lesson toward success."
+}
+
+];
 
   var state = {
     opponentIndex:0,
@@ -200,12 +225,60 @@
       chip.setAttribute('aria-selected', idx === i ? 'true':'false');
     });
     els.chatScroll.innerHTML = '';
-    appendMessage('ai', op.name, greetingFor(op));
+    loadIntroduction(op);
+    // have to remove -> appendMessage('ai', op.name, greetingFor(op));
   }
+// Intro Function
+  async function loadIntroduction(op) {
 
-  function greetingFor(op){
-    return 'The chamber seals behind you. ' + op.name + ' turns to face you. "Speak your first argument, and let us begin."';
-  }
+    showThinking(async function () {
+
+        try {
+
+            const response = await fetch("http://127.0.0.1:8000/intro", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    character: op.id
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to load introduction.");
+            }
+
+            const data = await response.json();
+              //currentTopic = data.topic;
+            hideThinking();
+
+            appendMessage(
+                "ai",
+                op.name,
+                data.intro,
+                true
+            );
+
+        } catch (err) {
+
+            hideThinking();
+
+            console.error(err);
+
+            appendMessage(
+                "ai",
+                "System",
+                "Unable to start the debate."
+            );
+        }
+
+    });
+
+}
+  // function greetingFor(op){
+  //   return 'The chamber seals behind you. ' + op.name + ' turns to face you. "Speak your first argument, and let us begin."';
+  // }
 
   function hexToRgba(hex, alpha){
     var c = hex.replace('#','');
@@ -363,17 +436,17 @@
      Score > 70 counts as a landed argument (more damage); otherwise it
      falters (little/no damage, and it costs the player some Clarity).
      ========================================================================= */
-  function scoreArgument(text){
-    var len = text.trim().length;
-    var base = 42 + Math.min(34, len * 0.35);
-    function metric(){ return Math.max(12, Math.min(98, Math.round(base + (Math.random()*32 - 16)))); }
-    var scores = {
-      Logic: metric(), Evidence: metric(), Creativity: metric(),
-      Persuasion: metric(), Confidence: metric()
-    };
-    var overall = Math.round((scores.Logic + scores.Evidence + scores.Creativity + scores.Persuasion + scores.Confidence) / 5);
-    return { scores: scores, overall: overall };
-  }
+  // function scoreArgument(text){
+  //   var len = text.trim().length;
+  //   var base = 42 + Math.min(34, len * 0.35);
+  //   function metric(){ return Math.max(12, Math.min(98, Math.round(base + (Math.random()*32 - 16)))); }
+  //   var scores = {
+  //     Logic: metric(), Evidence: metric(), Creativity: metric(),
+  //     Persuasion: metric(), Confidence: metric()
+  //   };
+  //   var overall = Math.round((scores.Logic + scores.Evidence + scores.Creativity + scores.Persuasion + scores.Confidence) / 5);
+  //   return { scores: scores, overall: overall };
+  // }
 
   function resetScoringUI(){
     var rows = els.scoringCard.querySelectorAll('.score-row');
@@ -422,101 +495,178 @@
     requestAnimationFrame(step);
   }
 
-  function runScoring(text, callback){
-    var result = scoreArgument(text);
-    resetScoringUI();
-    els.scoringOverlay.classList.add('show');
+ function runScoring(judge, callback) {
 
-    var order = ['Logic','Evidence','Creativity','Persuasion','Confidence'];
-    var startDelay = 300;
-    var stagger = 220;
-    order.forEach(function(m, idx){
-      var rowEl = els.scoringCard.querySelector('.score-row[data-metric="'+m+'"]');
-      setTimeout(function(){ animateScoreRow(rowEl, result.scores[m]); }, startDelay + idx*stagger);
+    resetScoringUI();
+
+    els.scoringOverlay.classList.add("show");
+
+    const metrics = [
+        {
+            name: "Logic",
+            value: Math.round(judge.logic * 10)
+        },
+        {
+            name: "Evidence",
+            value: Math.round(judge.evidence * 10)
+        },
+        {
+            name: "Relevance",
+            value: Math.round(judge.relevance * 10)
+        },
+        {
+            name: "Persuasion",
+            value: Math.round(judge.persuasiveness * 10)
+        },
+        {
+            name: "Confidence",
+            value: Math.round(judge.clarity * 10)
+        }
+    ];
+
+    metrics.forEach((metric, index) => {
+
+        const row = els.scoringCard.querySelector(
+            `.score-row[data-metric="${metric.name}"]`
+        );
+
+        setTimeout(() => {
+
+            animateScoreRow(
+                row,
+                metric.value
+            );
+
+        }, 300 + (index * 250));
+
     });
 
-    var lastEnd = startDelay + (order.length-1)*stagger + 560;
-    setTimeout(function(){
-      animateOverall(result.overall, function(){
-        var win = result.overall > 70;
-        els.overallTag.textContent = win ? 'Argument Lands' : 'Argument Falters';
-        els.overallTag.classList.add('show', win ? 'win' : 'lose');
-        if(!win){
-          els.scoringCard.classList.add('shake');
-          setTimeout(function(){ els.scoringCard.classList.remove('shake'); }, 420);
-        }
-        setTimeout(function(){
-          els.scoringOverlay.classList.remove('show');
-          if(callback) callback(result.overall, win);
-        }, 950);
-      });
-    }, lastEnd);
-  }
+    setTimeout(() => {
+
+        animateOverall(
+
+            Math.round(judge.overall * 10),
+
+            function () {
+
+                els.overallTag.textContent =
+                    judge.winner === "player"
+                        ? "Argument Wins"
+                        : "Argument Loses";
+
+                els.overallTag.classList.remove("win", "lose");
+
+                els.overallTag.classList.add(
+                    "show",
+                    judge.winner === "player"
+                        ? "win"
+                        : "lose"
+                );
+
+                setTimeout(function () {
+
+                    els.scoringOverlay.classList.remove("show");
+
+                    if (typeof callback === "function") {
+                        callback();
+                    }
+
+                }, 1000);
+
+            }
+
+        );
+
+    }, 1700);
+
+}
 
   /* =========================================================================
      SEND / RESPONSE FLOW
      ========================================================================= */
-  function sendMessage(){
-    var text = els.chatInput.value.trim();
-    if(!text || state.busy || state.hp <= 0) return;
-    var playerBubble = appendMessage('player', 'You', text, false);
-    els.chatInput.value = '';
+  function sendMessage() {
+
+    const text = els.chatInput.value.trim();
+
+    if (!text || state.busy || state.hp <= 0) return;
+
+    appendMessage("player", "You", text, false);
+    els.chatInput.value = "";
 
     state.busy = true;
     setControlsDisabled(true);
 
-    runScoring(text, function(overall, win){
-      playerBubble.classList.add(win ? 'flash-win' : 'flash-lose');
+    showThinking(async function () {
 
-      if(win){
-        bumpXP(45);
-      } else {
-        bumpXP(10);
-        state.clarity = Math.max(0, state.clarity - (8 + Math.random()*10));
-        els.clarityFill.style.width = state.clarity + '%';
-      }
-showThinking(async function () {
+        const op = OPPONENTS[state.opponentIndex];
 
-    var op = OPPONENTS[state.opponentIndex];
+        try {
 
-    try {
-      console.log(op.id);
-        const response = await fetch("http://127.0.0.1:8000/debate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                character: op.id,
-                message: text
-            })
-        });
+            const response = await fetch("http://127.0.0.1:8000/debate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    character: op.id,
+                    //topic: currentTopic,
+                    message: text
+                })
+            });
 
-        const data = await response.json();
+            if (!response.ok) {
+                throw new Error("Unable to contact backend.");
+            }
 
-        hideThinking();
+            const data = await response.json();
 
-        appendMessage("ai", op.name, data.reply, true);
+            hideThinking();
 
-        var dmg = win ? (14 + (overall - 70) * 0.4) : Math.max(0, (overall - 40) * 0.2);
-        applyDamage(dmg);
+            appendMessage(
+                "ai",
+                op.name,
+                data.reply,
+                true
+            );
 
-        if (!win && state.clarity <= 0 && state.hp > 0) {
-            setTimeout(triggerDefeat, 700);
+            runScoring(data.judge, function () {
+
+                applyDamage(data.judge.damage);
+
+                bumpXP(data.judge.xp);
+
+                state.busy = false;
+                setControlsDisabled(false);
+
+                if (state.hp <= 0) {
+                    return;
+                }
+
+                els.chatInput.focus();
+
+            });
+
         }
 
-    } catch (err) {
+        catch (err) {
 
-        hideThinking();
-        console.error(err);
-        appendMessage("ai", "System", err.message);
+            hideThinking();
 
-    }
+            console.error(err);
 
-});
-      
+            appendMessage(
+                "ai",
+                "System",
+                err.message
+            );
+
+            state.busy = false;
+            setControlsDisabled(false);
+        }
+
     });
-  }
+
+}
 
   function applyDamage(amount){
     state.hp = Math.max(0, state.hp - amount);
