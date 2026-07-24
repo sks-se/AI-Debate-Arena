@@ -1,19 +1,18 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from app.models.debate import DebateRequest
-from app.services.llm_service import ask_ai
+from app.services.debate_service import run_debate
 
 router = APIRouter()
 
+
 @router.post("/debate")
 def debate(data: DebateRequest):
+    try:
+        return run_debate(data)
 
-    reply = ask_ai(
-        data.character,
-        data.message
-    )
-
-    return {
-        "character": data.character,
-        "reply": reply
-    }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
