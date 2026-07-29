@@ -235,7 +235,7 @@
 
         try {
 
-            const response = await fetch("http://127.0.0.1:8000/intro", {
+            const response = await fetch("http://16.192.127.14:8000/intro", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -602,7 +602,7 @@
 
         try {
 
-            const response = await fetch("http://127.0.0.1:8000/debate", {
+            const response = await fetch("http://16.192.127.14:8000/debate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
